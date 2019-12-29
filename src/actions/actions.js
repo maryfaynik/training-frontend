@@ -23,7 +23,6 @@ export function setPackages(packages){
 }
 
 export function setActivePage(page){
-    console.log('here, page = ', page)
     return {type: "SET_ACTIVEPAGE", payload: page }
 }
 
@@ -35,7 +34,7 @@ export function initialFetch(user) {
             case "Trainer": //get this trianers clients and sessions, set trainers to this user
               getClients(dispatch, user.id)
               getSessions(dispatch, user.id)
-              setUsers(dispatch,[user], "Trainer")
+              setUsers(dispatch, [user], "Trainer")
               break
             case "Client": // get this client's session and trainers, set clients to this user
               getTrainers(dispatch, user.id)
@@ -43,12 +42,13 @@ export function initialFetch(user) {
               setUsers(dispatch, [user], "Client")
               break
             default: // Get all of everything...for manager
+              console.log("here, manager login")
               getClients(dispatch)
               getSessions(dispatch)
               getTrainers(dispatch)
               break
           }
-          
+
           // get all the levels
           getLevels(dispatch)
           // get all the packages
@@ -77,7 +77,6 @@ export function getSessions(dispatch, id = null){
         fetch(url)
         .then(res => res.json())
         .then(data => {
-            console.log("sessions = ", data.sessions)
             dispatch(setSessions(data.sessions))
         })
 }
@@ -100,15 +99,10 @@ export function getTrainers(dispatch, id = null){
         })
 }
 
-// CUD =================================================
+// CRUD =================================================
 export function addUser(user, userType){
     return {type: "ADD_USER", payload: {user, userType}}
-}
-
-export function addSession(session){
-    console.log("adding ", session, " in actions")
-    return {type: "ADD_SESSION", payload: session}
-}
+}    
 
 export function updateUser(user, userType){
     return {type: "UPDATE_USER", payload: {user, userType}}
@@ -116,6 +110,47 @@ export function updateUser(user, userType){
 export function deleteUser(id, userType){
     return {type: "DELETE_USER", payload: {id, userType}}
 }
+
+
+export function addSession(session){
+    return {type: "ADD_SESSION", payload: session}
+}    
+
+export function updateSession(session){
+    return {type: "UPDATE_SESSION", payload: session}
+}    
+
+export function cancelSession(session){
+    let updated = {...session}
+    updated.status = "cancelled"
+    return {type: "UPDATE_SESSION", payload: updated}
+}    
+
+
+export function addLevel(level){
+    return {type: "ADD_LEVEL", payload: level}
+}    
+
+export function updateLevel(level){
+    return {type: "UPDATE_LEVEL", payload: level}
+}    
+
+export function deleteLevel(id){
+    return {type: "UPDATE_LEVEL", payload: id}
+}    
+
+
+export function addPackage(pack){
+    return {type: "ADD_PACKAGE", payload: pack}
+}    
+
+export function updatePackage(pack){
+    return {type: "UPDATE_PACKAGE", payload: pack}
+}    
+
+export function deletePackage(id){
+    return {type: "DELETE_PACKAGE", payload: id}
+}    
 
 
 

@@ -5,14 +5,13 @@ import { Switch, Route, withRouter, Redirect} from 'react-router-dom'
 import Landing from '../../components/Navigation/Landing'
 import Login from './Login'
 import ScheduleContainer from '../Scheudle/ScheduleContainer'
-import TrainersContainer from '../Users/TrainersContainer'
-import ClientsContainer from '../Users/ClientsContainer';
+import UsersContainer from '../Users/UsersContainer';
+import PackagesContainer from '../Packages/PackagesContainer';
 
 class MainBody extends Component {
 
   renderLanding = () => {
       if(!this.props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
-      console.log("here?")
       return <Landing/>
   }
   renderLogin = () => {
@@ -22,17 +21,24 @@ class MainBody extends Component {
 
   renderClients = () => {
     if(!this.props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
-      return <ClientsContainer/>
+      // return <ClientsContainer/>
+      return <UsersContainer all={this.props.allClients} userType="Client"/>
   }
 
   renderTrainers = () => {
     if(!this.props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
-      return <TrainersContainer/>
+      // return <TrainersContainer/>
+      return <UsersContainer all={this.props.allTrainers} userType="Trainer"/>
   }
 
   renderSchedule = () => {
       if(!this.props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
       return <ScheduleContainer/>
+  }
+
+  renderPackages = () => {
+      if(!this.props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
+      return <PackagesContainer/>
   }
 
   renderProfile = () => {
@@ -55,6 +61,7 @@ class MainBody extends Component {
                 <Route exact path="/schedule" render={this.renderSchedule} />
                 <Route exact path="/trainers" render={this.renderTrainers} />
                 <Route exact path="/clients" render={this.renderClients} />
+                <Route exact path="/packages" render={this.renderPackages} />
                 <Route exact path="/profile/:id" render={this.renderProfile} />
             </Switch>
         </div>
@@ -65,7 +72,9 @@ class MainBody extends Component {
 
 const msp = (state) => {
     return{
-        user: state.user.user
+        user: state.user.user,
+        allTrainers: state.user.allTrainers,
+        allClients: state.user.allClients
     }
 }
 

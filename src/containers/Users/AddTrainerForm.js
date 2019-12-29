@@ -45,7 +45,6 @@ class AddTrainerForm extends Component {
             },
             type: "Trainer"
         }
-        console.log("submitting: ", newTrainer)
 
         fetch(`${API}/trainers`, {
             method: "POST",
@@ -56,7 +55,6 @@ class AddTrainerForm extends Component {
             body: JSON.stringify(newTrainer)
         }).then (resp => resp.json())
             .then(data => {
-                console.log("got back: ",data)
                 if(data.errors){
                     this.setState({
                         errors: data.errors,
@@ -69,7 +67,7 @@ class AddTrainerForm extends Component {
     }
    
     renderErrors = () => {
-        return this.state.errors.map(error => <li>{error}</li>)
+        return this.state.errors.map((error, i) => <li key={i}>{error}</li>)
     }
 
     

@@ -8,7 +8,7 @@ import { Dropdown, Icon, Button, Menu } from 'semantic-ui-react'
 import {getTrainerOptions, getClientOptions, getEvents, getResources} from '../../helpers/scheduleHelpers'
 import {getDayString, getTimeString, findClientByName} from '../../helpers/generalHelpers'
 
-import AddSessionForm from './AddSessionForm';
+import SessionForm from './SessionForm';
 
 const localizer = momentLocalizer(moment)
 const defaultSession = {
@@ -26,7 +26,7 @@ class ScheduleContainer extends Component {
         userType: "Manager",
         trainer: {},
         client: {},
-        addForm: false,
+        showForm: false,
         editSession: {...defaultSession},
         enterNew: true
     }
@@ -34,19 +34,20 @@ class ScheduleContainer extends Component {
     // update arrays of data in state anytime something changes
     // (i.e. a drop-down, view change, etc.)
     setData = () => {
-        console.log("here")
         const {user} = this.props
         switch(user.type){
             case "Trainer":
                 this.setState({
                     userType: "Trainer",
                     trainer: user,
+                    views: {day: true, week: true},
                     sessions: this.props.allSessions.filter(ses => ses.trainer_id === user.id)
                 })
                 break;
             case "Client":
                 this.setState({
                     userType: "Client",
+                    views: {day: true, week: true},
                     client: user,
                     trainers: this.props.allTrainers.filter(train => train.clients.includes(user.id)),
                     sessions: this.props.allSessions.filter(ses => ses.trainer_id === user.id)
@@ -65,23 +66,25 @@ class ScheduleContainer extends Component {
         this.setData()
     }
 
-    toggleAddForm = (e) => {
+    toggleForm = (e) => {
         this.setState({
-            addForm: !this.state.addForm,
+            showForm: !this.state.showForm,
             errors: []
         })
     }
 
     goBack = () => {
         this.setState({
-            addForm: false,
+            showForm: false,
             editSession: {...defaultSession},
-            errors: []
+            errors: [],
+            enterNew: true
         })
     }
 
     handleSlotSelect = (e) => {
- 
+        console.log("clicked on this slot...")
+        console.dir(e)
         let newSession = {
             date: getDayString(e.start),
             time: getTimeString(e.start),
@@ -89,11 +92,13 @@ class ScheduleContainer extends Component {
             trainer_id: e.resourceId,
             client_id: undefined,
         }
-       
+        
+        console.log('clicked slot, setting editSession to: ', newSession)
         this.setState({
             editSession: {...newSession},
-            addForm: !this.state.addForm,
-            errors: []
+            showForm: true,
+            errors: [],
+            enterNew: true
         })
         
 
@@ -104,6 +109,7 @@ class ScheduleContainer extends Component {
         let client = findClientByName(e.title, this.props.allClients)
 
         let newSession = {
+            id: e.id,
             date: getDayString(e.start),
             time: getTimeString(e.start),
             length: "60",
@@ -114,7 +120,7 @@ class ScheduleContainer extends Component {
         this.setState({
             enterNew: false,
             editSession: newSession,
-            addForm: !this.state.addForm,
+            showForm: true,
             errors: []
         })
     }
@@ -137,6 +143,13 @@ class ScheduleContainer extends Component {
     }
 
     render(){
+        console.log("in sched container, state = ", this.state)
+        console.log("in sched container, props = ", this.props)
+
+        // console.log("get events: ", getEvents(this.props.allSessions, this.props.allClients, this.state.trainer))
+        // console.log("get trainer options = ", getTrainerOptions(this.props.allTrainers))
+        // console.log("get resources =", getResources(this.props.allTrainers, this.state.trainer))
+
         const {user, allTrainers, allClients, allSessions} = this.props
         const {trainer, views } = this.state
 
@@ -146,8 +159,8 @@ class ScheduleContainer extends Component {
         }else{
             return (
                 <div className="sched-container">
-                    {this.state.addForm ? <AddSessionForm editSession={this.state.editSession} trainerOptions={getTrainerOptions(allTrainers)} clientOptions={getClientOptions(allClients)} goBack={this.goBack} toggleAddForm={this.toggleAddForm} new={this.state.enterNew}/> 
-                    : <Button onClick={this.toggleAddForm}><Icon name = "plus"/> Add Session</Button>}
+                    {this.state.showForm ? <SessionForm editSession={this.state.editSession} trainerOptions={getTrainerOptions(allTrainers)} clientOptions={getClientOptions(allClients)} goBack={this.goBack} toggleForm={this.toggleForm} isNew={this.state.enterNew}/> 
+                    : <Button onClick={this.toggleForm}><Icon name = "plus"/> Add Session</Button>}
                     
                     { this.state.userType === "Manager" ? 
                         <Menu secondary>
@@ -173,10 +186,11 @@ class ScheduleContainer extends Component {
                         selectable
                         onSelectEvent = {this.handleEventSelect}
                         onSelectSlot = {this.handleSlotSelect}
-                        defaultView={Views.DAY}
-                        step={15}
-                        min={new Date(2017, 1, 1, 5, 0, 0)}
-                        max={new Date(2050, 1, 1, 22, 0, 0)}
+                        defaultView= {Views.DAY}
+                        step= {15}
+                        scrollToTime= {new Date(moment())}
+                        min= {new Date(2017, 1, 1, 5, 0, 0)}
+                        max= {new Date(2050, 1, 1, 22, 0, 0)}
                         events= {getEvents(allSessions, allClients, trainer)}
                         resources= {getResources(allTrainers, trainer)}
                         startAccessor="start"

@@ -14,7 +14,7 @@ const EditClientForm = (props) => {
     }
 
     const renderErrors = () => {
-        return props.errors.map(error => <li>{error}</li>)
+        return props.errors.map((error, i) => <li key={i}>{error}</li>)
     }
 
     return (

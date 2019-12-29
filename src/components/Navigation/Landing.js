@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Feed } from 'semantic-ui-react';
+import { Card, Feed, Statistic } from 'semantic-ui-react';
 import { connect } from 'react-redux'
 
 class Landing extends Component {
@@ -8,16 +8,14 @@ class Landing extends Component {
   }
   
   getSessionStats = () => {
-    console.log("here, props= ", this.props)
     let monthSessions = this.props.allSessions.filter(session => new Date(session.daytime).getMonth() === new Date(Date.now()).getMonth())
-    console.log("month sessions = ", monthSessions)
   }
 
   render(){
     this.getSessionStats()
     return (
       <div>
-          WHAT?
+        
           <Card>
             <Card.Content>
               <Card.Header>This Month</Card.Header>
@@ -27,9 +25,9 @@ class Landing extends Component {
                 <Feed.Event>
                   <Feed.Label image='/images/avatar/small/jenny.jpg' />
                   <Feed.Content>
-                    <Feed.Date content='1 day ago' />
+                    <Feed.Date content='Top Trainer' />
                     <Feed.Summary>
-                      You added <a>Jenny Hess</a> to your <a>coworker</a> group.
+                      Someone's name and the number of sessions
                     </Feed.Summary>
                   </Feed.Content>
                 </Feed.Event>
@@ -37,9 +35,9 @@ class Landing extends Component {
                 <Feed.Event>
                   <Feed.Label image='/images/avatar/small/molly.png' />
                   <Feed.Content>
-                    <Feed.Date content='3 days ago' />
+                    <Feed.Date content='Top Client' />
                     <Feed.Summary>
-                      You added <a>Molly Malone</a> as a friend.
+                      Someone's name and session count
                     </Feed.Summary>
                   </Feed.Content>
                 </Feed.Event>
@@ -47,7 +45,22 @@ class Landing extends Component {
               </Feed>
             </Card.Content>
           </Card>
-  
+
+          <Statistic.Group horizontal size='tiny'>
+            <Statistic size='tiny'>
+              <Statistic.Value>506</Statistic.Value>
+              <Statistic.Label>Total Sessions</Statistic.Label>
+            </Statistic>
+            <Statistic size='tiny'>
+              <Statistic.Value>32</Statistic.Value>
+              <Statistic.Label>New Clients</Statistic.Label>
+            </Statistic>
+            <Statistic size='tiny'>
+              <Statistic.Value>256</Statistic.Value>
+              <Statistic.Label>Sessions Sold</Statistic.Label>
+            </Statistic>
+          </Statistic.Group>
+        
       </div>
     )
   }

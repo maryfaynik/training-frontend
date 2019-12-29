@@ -25,7 +25,8 @@ code {
 
 /* main and nav */
 .app > * {
-  min-width: 95%;
+  width: 95%;
+
   margin: auto;  
 }
 
@@ -42,31 +43,35 @@ code {
 .main > * {
   height: 80%;
   max-height: 90vh;
+  flex: 1 0 auto;
 }
 
 .sideBar {
   min-height: 100%;
-  max-width: 19%;
+  max-width: 13%;
 }
 
 .sideBar > * {
-  min-height: 100%;
+  min-height: 90%;
+  max-width: 95%
 }
 
 .mainBody {
   display: flex;
   justify-content: center;
   align-content: flex-start;
-  width: 79%;
-  max-width: 76vw;
+  /* width: 79%; */
+  max-width: 80%;
+
+
 }
 
 /* Containers */
 .mainBody > * {
   width: 95%;
-  max-width: 78vw;
-  /* max-width: 96%; */
-  min-height: 95%;
+  /* max-width: 78vw; */
+  max-width: 96%;
+  min-height: 90%;
 
 }
 
@@ -96,8 +101,9 @@ code {
 .inner-popup {
   position: absolute;  
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   left: 25%;  
   right: 25%;  
   top: 25%;  
@@ -106,7 +112,7 @@ code {
   border-radius: 10px;  
   background: #eff0f1;
 }
-.inner-popup > * {
+.session-form {
   width: 90%;
-  height: 90%;
+  height: 70%;
 }

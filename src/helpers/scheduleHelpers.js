@@ -22,7 +22,8 @@ export const getEvents = (sessions, clients, trainer) =>{
     if(trainer.id){
         sessions = sessions.filter(session => session.trainer_id === trainer.id)
     }
-    return sessions.map(session => {
+    let liveSessions = sessions.filter(ses => ses.status !== "cancelled")
+    return liveSessions.map(session => {
         let end = new Date(session.daytime)
         end.setMinutes(end.getMinutes() + session.length)
         let client = clients.find(client => client.id === session.client_id)

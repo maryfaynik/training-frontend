@@ -15,8 +15,12 @@ export class Login extends Component {
     errors: '',
   };
 
-  handleChange = event => {
-    const { name, value } = event.target;
+  handleChange = (e, {value}) => {
+    let name = "type"
+    if(e.target.name){
+      value = e.target.value
+      name = e.target.name
+    }
     this.setState({
       [name]: value,
     });
@@ -24,7 +28,6 @@ export class Login extends Component {
 
   //Upon login submit, check user auth
   handleSubmit = event => {
-    console.log("here")
     event.preventDefault();
     const { email, password, type } = this.state;
 
@@ -49,16 +52,23 @@ export class Login extends Component {
         if (data.data) {
           let user = data.data
 
-          //set the user
+          //cache the info
+          console.log("setting localstorage id to ", user.id)
+          localStorage.user_id = user.id;
+
+          //set the user in redux
           this.props.setUser(user);
 
           console.log("fetching all the shitsssss LOGIN")
           //fetch this user's clients, sessions, and trainers
-          initialFetch(user)
+          this.props.initialFetch(user)
           
         // If user is not valid / found, set user to null and record errors
         } else {
           this.props.setUser({});
+
+          localStorage.removeItem("user_id")
+          
           this.setState({
             errors: data.errors,
           });
@@ -126,7 +136,7 @@ export class Login extends Component {
                   label='Client'
                   name='type'
                   value='Client'
-                  checked={this.state.value === 'Client'}
+                  checked={this.state.type === 'Client'}
                   onChange={this.handleChange}
                 />
               </Grid.Column>

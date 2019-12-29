@@ -11,6 +11,11 @@ const NavBar = props => {
     
   }
 
+  const handleLogout = () =>{
+    localStorage.removeItem("user_id")
+    props.setUser({})
+  }
+
   return (
     <div className="nav">
       <Menu >
@@ -18,16 +23,12 @@ const NavBar = props => {
           <Menu.Item
             name='home'
             onClick={handleItemClick}
-          ><Icon name="target"/></Menu.Item>
-          <Menu.Item
-            name='Something'
-            onClick={handleItemClick}
-          />
+          >ON TARGET<Icon name="target"/></Menu.Item>
         </Menu.Menu>  
         <Menu.Menu position='right'>
           <Dropdown item icon='user' simple>
             <Dropdown.Menu>
-              <Dropdown.Item>
+              {/* <Dropdown.Item>
                 <Icon name='dropdown' />
                 <span className='text'>New</span>
                 <Dropdown.Menu>
@@ -36,11 +37,11 @@ const NavBar = props => {
                   <Dropdown.Item>Client</Dropdown.Item>
                   <Dropdown.Item>Manager</Dropdown.Item>
                 </Dropdown.Menu>
-              </Dropdown.Item>
+              </Dropdown.Item> */}
               <Dropdown.Item>My Account</Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item
-              onClick={() => props.setUser({})}>Logout</Dropdown.Item>
+              onClick={handleLogout}>Logout</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
           </Menu.Menu>

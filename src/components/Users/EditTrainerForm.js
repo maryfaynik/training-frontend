@@ -14,10 +14,8 @@ const EditTrainerForm = (props) => {
     }
 
     const renderErrors = () => {
-        return props.errors.map(error => <li>{error}</li>)
+        return props.errors.map((error, i) => <li key={i}>{error}</li>)
     }
-
-    console.log("here in form, props = ", props)
 
     return (
         

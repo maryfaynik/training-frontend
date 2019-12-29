@@ -10,11 +10,6 @@ function userReducer(state = defaultState, action) {
     switch (action.type) {
       
       case "SET_USER":
-        if(action.payload.id){
-          localStorage.user_id = action.payload.id
-        } else {
-          localStorage.removeItem('user_id');
-        }
         return {...state, user: action.payload}
 
       case "SET_USERS":
@@ -24,10 +19,10 @@ function userReducer(state = defaultState, action) {
 
       case "ADD_USER":
         key = `all${action.payload.userType}s`
-        console.log("adding ", action.payload.user, "to ", key)
         return {...state, [key]: [...state[key], action.payload.user]} 
 
       case "UPDATE_USER":
+        console.log("updating a user....")
         key = `all${action.payload.userType}s`
         newArray = [...state[key]]
         index = newArray.findIndex(user => user.id === action.payload.user.id)

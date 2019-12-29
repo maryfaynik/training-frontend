@@ -43,7 +43,6 @@ class AddClientForm extends Component {
             },
             type: "Client"
         }
-        console.log("submitting: ", newClient)
 
         fetch(`${API}/clients`, {
             method: "POST",
@@ -67,7 +66,7 @@ class AddClientForm extends Component {
     }
    
     renderErrors = () => {
-        return this.state.errors.map(error => <li>{error}</li>)
+        return this.state.errors.map((error, i) => <li key={i}>{error}</li>)
     }
 
     

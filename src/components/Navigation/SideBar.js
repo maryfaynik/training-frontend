@@ -13,33 +13,36 @@ const SideBar = (props) => {
                 return {
                     schedule: {name: "Schedule", to: "/schedule"},
                     trainers: {name: "Trainers", to: "/trainers"},
-                    clients: {name: "Clients", to: "/clients"}
+                    clients: {name: "Clients", to: "/clients"},
+                    packages: {name: "Manage Packages", to: "/packages"}
                 }
             case "Trainer":
                 return {
                     schedule: {name: "My Schedule", to: "/schedule"},
                     trainers: {name:  "My Profile", to: "/"},
-                    clients: {name: "My Clients", to: "/clients"}
+                    clients: {name: "My Clients", to: "/clients"},
+                    packages: {name: "Sell Packages", to: "/packages"}
                 }
             case "Client":
                 return {
                     schedule: {name: "My Schedule", to: "/schedule"},
                     trainers: {name: "My Trainers", to: "/trainers"},
-                    clients: {name: "My Profile", to: "/"}
+                    clients: {name: "My Profile", to: "/"},
+                    packages: {name: "Buy Packages", to: "/packages"}
                 }
             default:
                 return {
                     schedule: {name: "Schedule", to: "/schedule"},
                     trainers: {name: "Trainers", to: "/trainers"},
-                    clients: {name: "Clients", to: "/clients"}
+                    clients: {name: "Clients", to: "/clients"},
+                    packages: {name: "Packages", to: "/packages"}
                 }
         }
     }
 
     const info = getInfo() 
-
+    
     const handleClick = (e, {value}) => {
-        console.log(value)
         props.setActivePage(value)
     }
 
@@ -80,6 +83,15 @@ const SideBar = (props) => {
                 >
                 {info.clients.name}
                 </Menu.Item>
+
+                <Menu.Item
+                value="packages"
+                as={Link} to={info.packages.to}
+                onClick = {handleClick}
+                active={props.activeItem === 'packages'}
+                >
+                {info.packages.name}
+                </Menu.Item>
             
             </Menu>
         </div>
@@ -90,7 +102,7 @@ const SideBar = (props) => {
 const msp = (state) => {
     return {
         activeItem: state.app.activePage,
-        type: state.user.type
+        type: state.user.user.type
     }
 
 }

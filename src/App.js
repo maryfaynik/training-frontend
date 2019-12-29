@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
 import NavBar from './components/Navigation/NavBar'
 import Main from './components/Navigation/Main'
@@ -25,15 +26,23 @@ class App extends Component {
       }).then(res => res.json())
         .then(data => {
           
-          this.props.setUser(data.data);
-          let user=data.data
-          //fetch this user's clients, sessions, and trainers
+          //if cached login info fails, clear cache and force login
+          if(data.status !== 200){
+            localStorage.removeItem("user_id")
+            this.props.setUser({})
 
-          console.log("fetching all the shitsssss autologin")
-          this.props.initialFetch(user)
+          //on success keep cached login info and set user
+          }else{
+
+            this.props.setUser(data.data);
+            
+            //fetch this user's clients, sessions, and trainers
+            let user=data.data
+            console.log("fetching all the shitsssss autologin")
+            this.props.initialFetch(user)
+          }
 
         })
-        .catch(err => console.log('errors: ', err));
     }
   
   }
@@ -57,4 +66,4 @@ const msp = (state) =>{
 }
 
 
-export default connect(msp, {initialFetch, setUser})(App);
+export default connect(msp, {initialFetch, setUser})(withRouter(App));
