@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Form, Button, Radio, Menu} from 'semantic-ui-react';
+import { Form, Button} from 'semantic-ui-react';
 
 import {addPackage, updatePackage, deletePackage} from '../../actions/actions'
 import { getLevelOptions } from '../../helpers/generalHelpers';

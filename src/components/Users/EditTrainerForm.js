@@ -18,9 +18,9 @@ const EditTrainerForm = (props) => {
     }
 
     return (
-        
-        <div className="add-trainer-form">
-            <Form onSubmit={handleSubmit}>
+        <div className= 'outer-popup'>
+        <div className="inner-popup">
+            <Form className="edit-trainer-form" onSubmit={handleSubmit}>
                 <Form.Group widths='equal'>
                     <Form.Input onChange={handleChange} value={props.trainer.first_name} name="first_name" label='First name' />
                     <Form.Input onChange={handleChange} value={props.trainer.last_name} name="last_name" label='Last name' placeholder='Last name' />
@@ -39,12 +39,13 @@ const EditTrainerForm = (props) => {
                     <Form.Input onChange={handleChange} value={props.trainer.email} type="email" name="email" label='Email' placeholder='Email' />
                     <Form.Input onChange={handleChange} value={props.trainer.phone} type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="phone" label='Phone' placeholder='Phone' />
                 </Form.Group>
-                <Form.Group>
-                    <Form.Button>Submit</Form.Button>
-                    <Button onClick={props.goBack}>Go Back</Button>  
-                </Form.Group>
-                {props.errors.length > 0 ? <ul>{renderErrors()}</ul> : null}
             </Form>
+            <p>
+                <Button primary type="submit" form={"edit-trainer-form"}>Submit</Button>
+                <Button onClick={props.goBack}>Go Back</Button>  
+            </p>
+            {props.errors.length > 0 ? <ul>{renderErrors()}</ul> : null}
+        </div>
         </div>
     )
     

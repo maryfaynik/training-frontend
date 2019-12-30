@@ -8,7 +8,7 @@ class Landing extends Component {
   }
   
   getSessionStats = () => {
-    let monthSessions = this.props.allSessions.filter(session => new Date(session.daytime).getMonth() === new Date(Date.now()).getMonth())
+    // let monthSessions = this.props.allSessions.filter(session => new Date(session.daytime).getMonth() === new Date(Date.now()).getMonth())
   }
 
   render(){

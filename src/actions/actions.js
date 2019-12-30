@@ -18,6 +18,10 @@ export function setLevels(levels){
     return {type: "SET_LEVELS", payload: levels }
 }
 
+export function setClientPackages(client_packages){
+    return {type: "SET_CLIENT_PACKAGES", payload: client_packages }
+}
+
 export function setPackages(packages){
     return {type: "SET_PACKAGES", payload: packages }
 }
@@ -42,7 +46,6 @@ export function initialFetch(user) {
               setUsers(dispatch, [user], "Client")
               break
             default: // Get all of everything...for manager
-              console.log("here, manager login")
               getClients(dispatch)
               getSessions(dispatch)
               getTrainers(dispatch)
@@ -53,6 +56,8 @@ export function initialFetch(user) {
           getLevels(dispatch)
           // get all the packages
           getPackages(dispatch)
+          // get all client-packages
+          getClientPackages(dispatch)
 
     }
 }
@@ -64,6 +69,15 @@ export function getLevels(dispatch){
         dispatch(setLevels(data.levels))
     })
 }
+
+export function getClientPackages(dispatch){
+    fetch(`${API}/client_packages`)
+    .then(res => res.json())
+    .then(data => {
+        dispatch(setClientPackages(data.client_packages))
+    })
+}
+
 export function getPackages(dispatch){
     fetch(`${API}/packages`)
     .then(res => res.json())
@@ -150,6 +164,14 @@ export function updatePackage(pack){
 
 export function deletePackage(id){
     return {type: "DELETE_PACKAGE", payload: id}
+}    
+
+export function sellPackage(client_package){
+    return {type: "ADD_CLIENT_PACKAGE", payload: client_package}
+}    
+
+export function decreaseSessionCount(cp_id){
+    return {type: "DECREASE_SESSIONS", payload: cp_id}
 }    
 
 

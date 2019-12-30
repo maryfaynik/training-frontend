@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Form, Button, Radio, Search} from 'semantic-ui-react';
-import _ from 'lodash'
+import { Form, Button, Radio, Segment, Label} from 'semantic-ui-react';
 
 import ClientSearch from './ClientSearch'
-import { isAvailable } from "../../helpers/generalHelpers"
-import {addSession, updateSession, cancelSession} from '../../actions/actions'
+import { isAvailable, getClientPackageOptions } from "../../helpers/generalHelpers"
+import {addSession, updateSession, cancelSession, decreaseSessionCount} from '../../actions/actions'
 import {API} from '../../App'
+import BuySellPackageForm from '../Packages/BuySellPackageForm';
 
 class SessionForm extends Component {
 
@@ -18,6 +18,8 @@ class SessionForm extends Component {
         length: this.props.editSession.length,
         trainer_id: this.props.editSession.trainer_id,
         client_id: this.props.editSession.client_id,
+        client_package_id: null,
+        showPackForm: false,
         errors: []
     }
 
@@ -27,7 +29,6 @@ class SessionForm extends Component {
             value = e.target.value
             name = e.target.name
         }
-
         this.setState({
             [name]: value
         })
@@ -54,9 +55,13 @@ class SessionForm extends Component {
         
         if(!this.state.client_id || !this.state.trainer_id){
             this.setState({
-                errors: [...this.state.errors, "Must select client and trainer!"]
+                errors: ["Must select client and trainer!"]
             })
-        }else{
+        }else if (!this.state.client_package_id){
+            this.setState({
+                errors: ["Must select package to deduct"]
+            })
+        } else{
             
             let client = this.props.allClients.find(client => client.id === this.state.client_id)
             let trainer = this.props.allTrainers.find(trainer => trainer.id === this.state.trainer_id)
@@ -71,7 +76,6 @@ class SessionForm extends Component {
                 })
 
             }else{
-                console.log("it's good!")
 
                 let url = isNew ? "" : `/${this.state.id}`
                 let method = isNew ? "POST" : "PATCH"
@@ -92,14 +96,39 @@ class SessionForm extends Component {
                                 errors: data.errors,
                             })
                         }else{
+
+                            // Add / Update the session in redux
                             if(isNew){
-                                console.log("adding session:", data.session)
                                 this.props.addSession(data.session)
                             }else{
-                                console.log("calling update session...", data.session)
                                 this.props.updateSession(data.session)
                             }
-                            this.props.toggleForm()
+
+                            // Update the number of sessions left on client's package
+                            let cp = this.props.clientPackages.find(cp => cp.id === this.state.client_package_id)
+                            let obj = {
+                                sessions: cp.sessions - 1
+                            }
+                            
+                            fetch(`${API}/client_packages/${this.state.client_package_id}`, {
+                                method: "PATCH",
+                                headers: {
+                                    "content-type": "application/json",
+                                    "accepts": "application/json"
+                                },
+                                body: JSON.stringify(obj)
+                
+                            }).then (resp => resp.json())
+                                .then(data => {
+                                    if(data.errors){
+                                        this.setState({
+                                            errors: data.errors,
+                                        })
+                                    }else{
+                                        this.props.toggleForm()
+                                        this.props.decreaseSessionCount(this.state.client_package_id)
+                                    }
+                                })
                         }
                     })
             } 
@@ -107,13 +136,13 @@ class SessionForm extends Component {
     }
 
     handleCancel = (e) =>{
+
+        //eslint-disable-next-line
+        if(window.confirm("Are you sure you want to cancel this session?") === false) return 
+        
         let obj = {
             status: "cancelled"
         }
-  
-        console.log("clicked cancel")
-        console.log(this.state)
-        console.log("props = ", this.props)
 
         fetch(`${API}/sessions/${this.state.id}`, {
             method: "PATCH",
@@ -143,65 +172,112 @@ class SessionForm extends Component {
         return this.state.errors.map((error, i) => <li key={i}>{error}</li>)
     }
 
+    toggleForm = (e) => {
+        if(e) e.preventDefault()
+        this.setState({
+            showPackForm: !this.state.showPackForm
+        })
+    }
+
+    renderPackageForm = () => {
+        return (<BuySellPackageForm 
+            selling={true} 
+            package={{}} 
+            packages={this.props.packages} 
+            toggleForm={this.toggleForm} 
+            goBack={this.toggleForm} 
+            client={this.props.allClients.find(client => client.id === this.state.client_id)} 
+            allClients={this.props.allClients}
+            />)
+    }
+
+    renderPackageChoices = () => {
+        let packOptions = getClientPackageOptions(this.state.client_id, this.props.clientPackages)
+        if(packOptions.length < 1){
+            return <Fragment>
+                    <Button size="mini" secondary onClick={this.toggleForm}>Buy Sessions</Button>
+                </Fragment>
+        }
+        return (<Form.Select
+                    onChange={this.handleChange}
+                    value={this.state.client_package_id}
+                    name="client_package_id"
+                    options={packOptions}
+                    placeholder='Select Package'
+                />)
+    }
+
     render(){
-
+        console.log("session form state = ", this.state)
         return (
+            this.state.showPackForm ? this.renderPackageForm()
+            :
             <div className= 'outer-popup'>
-            <div className="inner-popup">
-                <Form className='session-form' id="session-form" value={this.state.id} onSubmit={this.handleSubmit}>
-                    <Form.Group widths='equal'>
-                        <Form.Input onChange={this.handleChange} value={this.state.date} name="date" label='Day' type="date"/>
-                        <Form.Input onChange={this.handleChange} value={this.state.time} name="time" label='Time' type="time"/>
-                    </Form.Group>
-                    <Form.Group> 
-                        <Form.Field>
-                            <Radio
-                                label='30 min'
-                                name='length'
-                                value="30"
-                                checked={this.state.length === '30'}
-                                onChange={this.handleChange}
-                            />
-                        </Form.Field>
-                        <Form.Field>
-                            <Radio
-                                label='60 min'
-                                name='length'
-                                value="60"
-                                checked={this.state.length === '60'}
-                                onChange={this.handleChange}
-                            />
-                        </Form.Field>
-                        <Form.Field>
-                            <Radio
-                                label='90 min'
-                                name='length'
-                                value="90"
-                                checked={this.state.length === '90'}
-                                onChange={this.handleChange}
-                            />
-                        </Form.Field>
-                    </Form.Group> 
-                    <Form.Group>
-                        <Form.Select
-                            onChange={this.handleChange}
-                            value={this.state.trainer_id}
-                            name="trainer_id"
-                            label='Trainer'
-                            options={this.props.trainerOptions}
-                            placeholder='Select Trainer'
-                        />
-                        <ClientSearch clients={this.props.allClients} setClient={(id) => this.setState({client_id: id})}/>
-                    </Form.Group>
-                </Form>
-                <p>
-                    <Button primary type="submit" form={"session-form"}>{this.props.isNew ? "Book Session" : "Save Changes"}</Button>
-                    { this.props.isNew ? null : <Button onClick={this.handleCancel}>Cancel Session</Button>}
-                    <Button onClick={this.props.goBack}>Go Back</Button>
-                </p>
+                <div className="inner-popup">
+                    <Form className='session-form' id="session-form" value={this.state.id} onSubmit={this.handleSubmit}>
+                        <Form.Group widths='equal'>
+                            <Form.Input onChange={this.handleChange} value={this.state.date} name="date" label='Day' type="date"/>
+                            <Form.Input onChange={this.handleChange} value={this.state.time} name="time" label='Time' type="time"/>
+                        </Form.Group>
+                        <Form.Group> 
+                            <Form.Field>
+                                <Radio
+                                    label='30 min'
+                                    name='length'
+                                    value="30"
+                                    checked={this.state.length === '30'}
+                                    onChange={this.handleChange}
+                                />
+                            </Form.Field>
+                            <Form.Field>
+                                <Radio
+                                    label='60 min'
+                                    name='length'
+                                    value="60"
+                                    checked={this.state.length === '60'}
+                                    onChange={this.handleChange}
+                                />
+                            </Form.Field>
+                            <Form.Field>
+                                <Radio
+                                    label='90 min'
+                                    name='length'
+                                    value="90"
+                                    checked={this.state.length === '90'}
+                                    onChange={this.handleChange}
+                                />
+                            </Form.Field>
+                        </Form.Group> 
+                        <Form.Group>
+                            <Segment>
+                                <Label attached="top">Trainer</Label>
+                                <Form.Select
+                                    onChange={this.handleChange}
+                                    value={this.state.trainer_id}
+                                    name="trainer_id"
+                                    options={this.props.trainerOptions}
+                                    placeholder='Select Trainer'
+                                />
+                            </Segment>
+                        </Form.Group>
+                        <Form.Group>
+                            <Segment>
+                                <Label attached="top">Client</Label>
+                                <ClientSearch client_id={this.state.client_id} clients={this.props.allClients} setClient={(id) => this.setState({client_id: id})}/>
+                                {this.state.client_id !== undefined ? 
+                                    this.renderPackageChoices()
+                                : null}
+                            </Segment>
+                        </Form.Group>
+                    </Form>
+                    <p>
+                        <Button primary type="submit" form={"session-form"}>{this.props.isNew ? "Book Session" : "Save Changes"}</Button>
+                        { this.props.isNew ? null : <Button onClick={this.handleCancel}>Cancel Session</Button>}
+                        <Button onClick={this.props.goBack}>Go Back</Button>
+                    </p>
 
-                {this.state.errors.length > 0 ? <ul>{this.renderErrors()}</ul> : null}
-            </div>
+                    {this.state.errors.length > 0 ? <ul>{this.renderErrors()}</ul> : null}
+                </div>
             </div>
         )
     }
@@ -211,11 +287,13 @@ const msp = (state) => {
     return {
         allClients: state.user.allClients,
         allSessions: state.schedule.allSessions,
-        allTrainers: state.user.allTrainers
+        allTrainers: state.user.allTrainers,
+        clientPackages: state.app.clientPackages,
+        packages: state.app.packages
     }
 }
 
-export default connect(msp, { addSession, updateSession, cancelSession })(withRouter(SessionForm))
+export default connect(msp, { addSession, updateSession, cancelSession, decreaseSessionCount })(withRouter(SessionForm))
 
 
 

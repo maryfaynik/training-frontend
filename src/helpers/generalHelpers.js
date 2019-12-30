@@ -22,29 +22,25 @@ export const getTimeString = (date) =>{
 
 export const overlap = (start1, len1, start2, len2) => {
     start1 = new Date(start1)
-    console.log("start1 = ", start1)
-    console.log("start2 = ", start2)
+ 
     let end1 = new Date(start1)
     end1.setMinutes(end1.getMinutes() + len1)
     let end2 = new Date(start2)
     end2.setMinutes(end2.getMinutes() + len2)
-    console.log("end1 = ", end1)
-    console.log("end2 = ", end2)
+
 
     
-    return (start1 >= start2 && start1 < end2 || end1 > start2 && end1 <= end2)
+    return (start1 >= start2 && start1 < end2) || (end1 > start2 && end1 <= end2)
 }
 
 export const isAvailable = (user, sessions, daytime, length) => {
-    console.log('daytime =', daytime)
+
     let potentialConflicts = sessions.filter(ses => {
         return ((ses.client_id === user.id || ses.trainer_id === user.id) && ses.status !== "cancelled") 
     })
-    console.log("potentials= ",potentialConflicts)
+ 
     let conflict = potentialConflicts.find(ses => overlap(ses.daytime, ses.length, daytime, length) )
-    console.log("conflict = ", conflict)
-    console.log("the user in question is:" , user)
-    console.log("going to return ", conflict === undefined)
+
     return (conflict === undefined)
 }
 
@@ -86,4 +82,34 @@ export const getLevelOptions = (levels) => {
             text: level.name
         }
     })
+}
+
+export const getPackageOptions = (packages) => {
+
+    return packages.map(pack => {
+        return {
+            key: pack.id,
+            value: pack.id,
+            text: pack.title
+        }
+    })
+}
+
+
+export const getClientPackageOptions = (client_id, all_cps) => {
+    let cps =  all_cps.filter(client_package => client_package.client.id === client_id)
+
+    cps = cps.filter(client_package => client_package.sessions > 0)
+
+    cps = cps.filter(client_package => new Date(client_package.expiration) >= new Date())
+    
+    return cps.map(cp => {
+        console.log("mapping ", cp, " to an option")
+        return {
+            key: cp.id,
+            value: cp.id,
+            text: cp.package.title
+        }
+    })
+      
 }

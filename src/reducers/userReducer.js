@@ -22,7 +22,7 @@ function userReducer(state = defaultState, action) {
         return {...state, [key]: [...state[key], action.payload.user]} 
 
       case "UPDATE_USER":
-        console.log("updating a user....")
+       
         key = `all${action.payload.userType}s`
         newArray = [...state[key]]
         index = newArray.findIndex(user => user.id === action.payload.user.id)

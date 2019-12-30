@@ -73,8 +73,9 @@ class AddTrainerForm extends Component {
     
     render(){
         return (
-            <div className="add-trainer-form">
-                <Form onSubmit={this.handleSubmit}>
+            <div className= 'outer-popup'>
+            <div className="inner-popup">
+                <Form className="add-trainer-form" onSubmit={this.handleSubmit}>
                     <Form.Group widths='equal'>
                         <Form.Input onChange={this.handleChange} name="first_name" label='First Name' placeholder='First name' />
                         <Form.Input onChange={this.handleChange} name="last_name" label='Last Name' placeholder='Last name' />
@@ -93,12 +94,13 @@ class AddTrainerForm extends Component {
                         <Form.Input onChange={this.handleChange} type="email" name="email" label='Email' placeholder='Email' />
                         <Form.Input onChange={this.handleChange} type="phone" name="phone" label='Phone' placeholder='Phone' />
                     </Form.Group>
-                    <Form.Group>
-                        <Form.Button>Submit</Form.Button>
-                        <Button onClick={this.props.goBack}>Go Back</Button>
-                    </Form.Group>
-                    {this.state.errors.length > 0 ? <ul>{this.renderErrors()}</ul> : null}
                 </Form>
+                <p>
+                    <Button primary type="submit" form={"add-trainer-form"}>Submit</Button>
+                    <Button onClick={this.props.goBack}>Go Back</Button>
+                </p>
+                {this.state.errors.length > 0 ? <ul>{this.renderErrors()}</ul> : null}
+            </div>
             </div>
         )
     }

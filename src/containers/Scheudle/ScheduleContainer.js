@@ -143,13 +143,7 @@ class ScheduleContainer extends Component {
     }
 
     render(){
-        console.log("in sched container, state = ", this.state)
-        console.log("in sched container, props = ", this.props)
-
-        // console.log("get events: ", getEvents(this.props.allSessions, this.props.allClients, this.state.trainer))
-        // console.log("get trainer options = ", getTrainerOptions(this.props.allTrainers))
-        // console.log("get resources =", getResources(this.props.allTrainers, this.state.trainer))
-
+    
         const {user, allTrainers, allClients, allSessions} = this.props
         const {trainer, views } = this.state
 

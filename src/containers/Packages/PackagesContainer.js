@@ -4,8 +4,8 @@ import { withRouter } from 'react-router-dom'
 import {Item, Segment, Header, Button} from 'semantic-ui-react';
 
 import { deletePackage, updatePackage, addPackage} from "../../actions/actions"
-import {API} from '../../App'
 import AddEditPackageForm from './AddEditPackageForm';
+import BuySellPackageForm from './BuySellPackageForm';
 
 
 class PackagesContainer extends Component {
@@ -38,13 +38,11 @@ class PackagesContainer extends Component {
     // HANDLERS -------------------------------
 
     handleClick = (e, id) => {
-        console.dir(e)
-        console.log(e.target)
+        console.log("clicked...e: ", e.target)
         let name = e.target.name
         let editPack = {}
         if(id !== -1) editPack = this.props.packages.find(pack => pack.id === id)
-        console.log("target id ", id)
-        console.log("setting edit pack to ", editPack)
+       
         this.setState({
             showPopup: true,
             form: name,
@@ -60,9 +58,10 @@ class PackagesContainer extends Component {
             case "add":
                 return <AddEditPackageForm isNew={true} toggleForm={this.toggleForm} goBack={this.goBack} levels={this.props.levels}/>
             case "sell":
-                break
+                return <BuySellPackageForm selling={true} package={this.state.editPack} packages={this.props.packages} toggleForm={this.toggleForm} goBack={this.goBack} client={{}} allClients={this.props.allClients}/>
             case "buy":
-                break
+                return <BuySellPackageForm selling={false} package={this.state.editPack} packages={this.props.packages} toggleForm={this.toggleForm} goBack={this.goBack} client={this.props.user} allClients={[this.props.user]}/>
+                
             default:
                 break
         }
@@ -109,8 +108,8 @@ class PackagesContainer extends Component {
                             subheader={`${pack.session_count} ${pack.level.name} session${pack.session_count > 1 ? "s" : "" }`}/>
                         <Header as='h4' content={`Price: $${pack.price}.00`}/>
                         <span>
-                            {type === "Manager" ? <Button name="edit" onClick={(e,) => this.handleClick(e, pack.id)}>Edit Package</Button> : null}
-                            {type === "Trainer" ? null : <Button name={options[type].name} onClick={() => this.handleClick(pack.id)}>{options[type].package_button}</Button>}
+                            {type === "Manager" ? <Button name="edit" onClick={(e) => this.handleClick(e, pack.id)}>Edit Package</Button> : null}
+                            {type === "Trainer" ? null : <Button name={options[type].name} onClick={(e) => this.handleClick(e, pack.id)}>{options[type].package_button}</Button>}
                         </span>
                     </Segment>
         })
@@ -143,7 +142,8 @@ const msp = (state) => {
     return {
         user: state.user.user,
         packages: state.app.packages,
-        levels: state.app.levels
+        levels: state.app.levels,
+        allClients: state.user.allClients
     }
 }
 export default connect(msp, {deletePackage, updatePackage, addPackage})(withRouter(PackagesContainer));

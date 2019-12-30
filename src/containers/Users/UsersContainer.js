@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import {Button, Card, Menu, Input} from 'semantic-ui-react';
 
-import {getFullName, getAge} from '../../helpers/generalHelpers'
+import {getFullName, getAge, getLevelOptions} from '../../helpers/generalHelpers'
 import {updateUser, deleteUser} from '../../actions/actions'
 import AddTrainerForm from './AddTrainerForm.js'
 import AddClientForm from './AddTrainerForm.js'
@@ -11,7 +11,6 @@ import EditClientForm from '../../components/Users/EditClientForm'
 import EditTrainerForm from '../../components/Users/EditTrainerForm'
 import {API} from '../../App'
 
-import { getLevelOptions } from '../../helpers/generalHelpers'
 class UsersContainer extends Component {
 
     state = {
@@ -33,6 +32,9 @@ class UsersContainer extends Component {
     }
 
     deleteUser = (e) => {
+        //eslint-disable-next-line
+        if(!confirm("Are you sure you want to delete this user?")) return 
+        
         let id = e.target.value
         fetch(`${API}/${this.state.path}/${id}`, {
             method: "DELETE",
@@ -130,7 +132,7 @@ class UsersContainer extends Component {
     // RENDERS ------------------------------
     renderAddForm(){
         return (this.props.userType === "Trainer" ? 
-            <AddTrainerForm toggleForm={this.toggleNewForm} levelOptions={this.getLevelOptions()} goBack={this.goBack}/>
+            <AddTrainerForm toggleForm={this.toggleNewForm} levelOptions={getLevelOptions(this.props.levels)} goBack={this.goBack}/>
             : <AddClientForm toggleForm={this.toggleNewForm} goBack={this.goBack}/> 
         )
     }

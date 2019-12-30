@@ -3,7 +3,8 @@
 const defaultState = {
     activePage: 'dashboard',
     levels: [],
-    packages: []
+    packages: [],
+    clientPackages: []
   }
   
 function scheduleReducer(state= defaultState, action) {
@@ -14,6 +15,7 @@ function scheduleReducer(state= defaultState, action) {
             return {...state, activePage: action.payload}
         
         case "SET_LEVELS":
+             console.log("setting levels to ", action.payload)
             return {...state, levels: action.payload}
         
         case "ADD_LEVEL":
@@ -29,12 +31,25 @@ function scheduleReducer(state= defaultState, action) {
             index = state.levels.findIndex(level => level.id === parseInt(action.payload))
             return {...state, levels: [...state.levels.slice(0, index), ...state.levels.slice(index +1)]}
                         
-
         case "SET_PACKAGES":
+            console.log("setting packages to ", action.payload)
             return {...state, packages: action.payload}
 
         case "ADD_PACKAGE":
             return {...state, packages: [...state.packages, action.payload]}
+            
+        case "SET_CLIENT_PACKAGES":
+            console.log("setting client packages to ", action.payload)
+            return {...state, clientPackages: action.payload}
+
+        case "ADD_CLIENT_PACKAGE":
+            return {...state, clientPackages: [...state.clientPackages, action.payload]}
+        
+        case "DECREASE_SESSIONS":
+            newArray = [...state.clientPackages]
+            index = state.clientPackages.findIndex(cp => cp.id === action.payload)
+            newArray[index].sessions -= 1
+            return {...state, clientPackages: [...newArray]}
     
         case "UPDATE_PACKAGE":
             newArray = [...state.packages]

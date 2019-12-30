@@ -14,8 +14,19 @@ class ClientSearch extends Component {
         searchValue: ""
     }
 
+    componentDidMount(){
+        console.log("props on client search mount:", this.props)
+        if(this.props.client_id > 0){
+            console.log("here!!!!!!")
+            let client = this.props.clients.find(client => client.id === this.props.client_id)
+            this.props.setClient(client.id)
+            this.setState({
+                searchValue: getFullName(client)
+            })
+        }
+    }
+
     handleClientSearchSelect = (e, { result }) => {
-        console.log("selected :", result)
         this.props.setClient(result.id)
         this.setState({
             searchValue: result.title
@@ -52,8 +63,6 @@ class ClientSearch extends Component {
                 // otherwise, create regeX and define isMatch function to do comparison
                 const re = new RegExp(_.escapeRegExp(this.state.searchValue), 'i')
                 const isMatch = (result) => re.test(getFullName(result))
-    
-                console.log("results are ", _.filter(this.props.clients, isMatch) )
 
                 this.setState({
                     isLoading: false, 
@@ -66,11 +75,11 @@ class ClientSearch extends Component {
     }
 
     render(){
-        console.log("renderings, state = ", this.state)
+
         const {isLoading, searchResults, searchValue} = this.state
         return (
-            <Search
-                label='Client'
+            <Search className="client-search"
+                placeholder='Search Client Name'
                 loading={isLoading}
                 onResultSelect={this.handleClientSearchSelect}
                 onSearchChange={_.debounce(this.handleClientSearchChange, 500, {
