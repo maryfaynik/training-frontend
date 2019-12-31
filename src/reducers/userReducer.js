@@ -1,7 +1,8 @@
 const defaultState = {
   user: {},
   allClients: [],
-  allTrainers: []
+  allTrainers: [],
+  allUsers: []
 }
 
 function userReducer(state = defaultState, action) {
@@ -13,6 +14,7 @@ function userReducer(state = defaultState, action) {
         return {...state, user: action.payload}
 
       case "SET_USERS":
+        
         key = `all${action.payload.userType}s`
         console.log("setting ", key, " to ", action.payload.users)
         return {...state, [key]: action.payload.users} 

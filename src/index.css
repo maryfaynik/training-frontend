@@ -32,18 +32,21 @@ code {
 
 .main {
   display: flex;
-  justify-content: left;
+  justify-content: center ;
   align-items: flex-start;
   align-content: flex-start;
   min-height: 90vh;
   max-height: 100vh;
 }
 
-/* sideBar and MainBody */
+/* Children of main = sideBar and MainBody */
 .main > * {
-  height: 80%;
+  /* height: 80%; */
+  min-height: 85vh;
   max-height: 90vh;
   flex: 1 0 auto;
+  /* display: flex;
+  justify-content: center; */
 }
 
 .sideBar {
@@ -62,69 +65,45 @@ code {
   align-content: flex-start;
   /* width: 79%; */
   max-width: 80%;
-
-
+  /* height: 90%; */
 }
 
-/* Containers */
+/* CHILDREN OF MAIN BODY */
+
 .mainBody > * {
   width: 95%;
   /* max-width: 78vw; */
   max-width: 96%;
-  min-height: 90%;
-
+  min-height: 50vh;
 }
 
-/* the actual calendar & the add/edit session forms */
-.sched-container > * {
-  /* min-height: 30%; */
-  max-width: 95%;
-}
-
-.calendar {
-  max-height: 70vh;
-}
-
-.outer-popup{
-  position: fixed;  
-  width: 100%;  
-  height: 100%;  
-  top: 0;  
-  left: 0;  
-  right: 0;  
-  bottom: 0;  
-  margin: auto;  
-  background-color: rgba(0,0,0, 0.5);
-  z-index: 20;
-}
-
-.inner-popup {
-  position: absolute;  
+.login > * {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  left: 20%;  
-  right: 20%;  
-  top: 20%;  
-  bottom: 20%;  
-  border-radius: 10px;  
-  background: #eff0f1;
+}
+
+
+/* ancestors of the sched container */
+.sched-container > * {
+  /* min-height: 30%; */
+  max-width: 95%;
+}
+.calendar {
+  max-height: 70vh;
 }
 .session-form {
   width: 90%;
   height: 70%;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
 .client-trainer-select {
   width: 20vw;
+}
+
+.signup-segment {
+  width: 30vw;
 }
 
 #schedule-menu{
@@ -146,4 +125,43 @@ form {
 }
 .cancelled-session {
   color: red;
+}
+
+/* popup stuff */
+.outer-popup{
+  position: fixed;  
+  width: 100%;  
+  height: 100%;  
+  top: 0;  
+  left: 0;  
+  right: 0;  
+  bottom: 0;  
+  margin: auto;  
+  background-color: rgba(0,0,0, 0.5);
+  z-index: 20;
+}
+
+.inner-popup {
+  position: absolute;  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  left: 15%;  
+  right: 15%;  
+  top: 15%;  
+  bottom: 15%;  
+  border-radius: 10px;  
+  background: #eff0f1;
+}
+
+
+
+/*misc individual stuff */
+form {
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }

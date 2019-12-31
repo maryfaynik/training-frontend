@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import {Item, Segment, Header, Button} from 'semantic-ui-react';
+import {Grid, Header, Button, Divider, Icon, Segment, Menu} from 'semantic-ui-react';
 
 import { deletePackage, updatePackage, addPackage} from "../../actions/actions"
 import AddEditPackageForm from './AddEditPackageForm';
@@ -68,7 +68,7 @@ class PackagesContainer extends Component {
     }
     
     renderAddButton = () =>{
-        return this.props.user.type === "Manager" ? <Button name="add" onClick={(e) => this.handleClick(e, -1)}>Add Package</Button> : null
+        return this.props.user.type === "Manager" ? <Button name="add" onClick={(e) => this.handleClick(e, -1)}><Icon name="plus"/>Add Package</Button> : null
     }
 
     // Render the level sections for the package list
@@ -76,11 +76,14 @@ class PackagesContainer extends Component {
         return this.props.levels.map(level => {
             let packs = this.props.packages.filter(pack => pack.level.id === level.id)
             packs.sort((a, b) => a.price - b.price)
-            return <Fragment key={level.id}>
-                    <Header as="h2" content={`${level.name} Packages:`}/>
-                    <Segment.Group>
-                        {this.renderPackages(packs)}
-                    </Segment.Group>
+            return <Fragment>
+                    <Grid.Row key={level.id} columns={1}>
+                        <Grid.Column>
+                            <Header as="h3"><Icon name="angle right"/>{level.name} Packages:</Header>
+                        </Grid.Column>
+                    </Grid.Row>
+                    {this.renderPackages(packs)}
+                    <Divider/>
                     </Fragment>
 
         })
@@ -102,16 +105,18 @@ class PackagesContainer extends Component {
         }
 
         return packs.map(pack => {
-            return <Segment key={pack.id}>
-                        <Header as='h2'
+            return <Grid.Row key={pack.id} columns={2}>
+                    <Grid.Column width={1}> </Grid.Column>
+                    <Grid.Column width={10}>
+                        <Header as='h3'
                             content={pack.title}
-                            subheader={`${pack.session_count} ${pack.level.name} session${pack.session_count > 1 ? "s" : "" }`}/>
-                        <Header as='h4' content={`Price: $${pack.price}.00`}/>
+                            subheader={`${pack.session_count} ${pack.level.name} session${pack.session_count > 1 ? "s" : "" } | Price: $${pack.price}.00`}/>
                         <span>
                             {type === "Manager" ? <Button name="edit" onClick={(e) => this.handleClick(e, pack.id)}>Edit Package</Button> : null}
                             {type === "Trainer" ? null : <Button name={options[type].name} onClick={(e) => this.handleClick(e, pack.id)}>{options[type].package_button}</Button>}
                         </span>
-                    </Segment>
+                    </Grid.Column>
+                    </Grid.Row>
         })
     }
 
@@ -122,15 +127,20 @@ class PackagesContainer extends Component {
 
             <div className="packages-container">
                 {this.state.showPopup ?  this.renderPopup() : null} 
-                {this.renderAddButton()}
-  
-                <h1>All Packages</h1>
-                 <Item.Group divided>
-                </Item.Group>
                 
-                <Segment.Group>
+                <Menu secondary>
+                    <Menu.Item>
+                        <h1>All Packages</h1>
+                    </Menu.Item>
+                    <Menu.Item>
+                        {this.renderAddButton()}
+                    </Menu.Item>
+                </Menu>
+  
+                <Divider/>
+                <Grid>
                     {this.renderLevelPackages()}  
-                </Segment.Group> 
+                </Grid> 
             </div>
         )
         

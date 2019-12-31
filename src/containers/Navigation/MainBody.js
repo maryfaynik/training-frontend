@@ -4,6 +4,7 @@ import { Switch, Route, withRouter, Redirect} from 'react-router-dom'
 
 import Landing from '../../components/Navigation/Landing'
 import Login from './Login'
+import Signup from './Signup'
 import ScheduleContainer from '../Scheudle/ScheduleContainer'
 import UsersContainer from '../Users/UsersContainer';
 import PackagesContainer from '../Packages/PackagesContainer';
@@ -17,6 +18,10 @@ class MainBody extends Component {
   renderLogin = () => {
     if(this.props.user.id) return <Redirect to="/"/>
       return <Login/>
+  }
+  renderSignup = () => {
+    if(this.props.user.id) return <Redirect to="/"/>
+      return <Signup/>
   }
 
   renderClients = () => {
@@ -58,6 +63,7 @@ class MainBody extends Component {
                 <Route exact path="/landing" render={this.renderLanding} />
                 <Route exact path="/" render={this.renderLanding} />
                 <Route exact path="/login" render={this.renderLogin} />
+                <Route exact path="/signup" render={this.renderSignup} />
                 <Route exact path="/schedule" render={this.renderSchedule} />
                 <Route exact path="/trainers" render={this.renderTrainers} />
                 <Route exact path="/clients" render={this.renderClients} />

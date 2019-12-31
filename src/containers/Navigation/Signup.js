@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { withRouter, Link } from 'react-router-dom'
-import { Form, Button, Grid, Radio, Segment, Menu } from 'semantic-ui-react';
+import { Form, Button, Grid, Radio, Segment, Menu, Label} from 'semantic-ui-react';
 import { API } from '../../App';
 
-import {setUser, initialFetch, setLoading} from '../../actions/actions'
+import {setUser, updateUser} from '../../actions/actions'
 
-export class Login extends Component {
+export class Signup extends Component {
 
   state = {
     email: '',
     password: '',
-    type: 'Manager',
+    password_confirm: '',
+    type: 'Client',
     errors: '',
   };
 
@@ -26,30 +27,17 @@ export class Login extends Component {
     });
   };
 
-  //Upon login submit, check user auth
+  //Upon Login submit, check user auth
   handleSubmit = event => {
     event.preventDefault();
-    const { email, password, type } = this.state;
+    const { email, password, password_confirm, type } = this.state;
 
-    const user = {
-      email,
-      password,
-      type
-    };
-
-    fetch(`${API}/login`, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        accept: 'application/json',
-      },
-      body: JSON.stringify(user),
-    })
+    fetch(`${API}/finduser/${email}`)
       .then(res => res.json())
       .then(data => {
-    
-        // If the user is valid, log them in...
-        if (data.data) {
+
+        // If the user is valid, log them in and save their password to DB...
+        if (data.user) {
           let user = data.data
 
           //cache the info
@@ -62,6 +50,16 @@ export class Login extends Component {
           console.log("fetching all the shitsssss LOGIN")
           //fetch this user's clients, sessions, and trainers
           this.props.initialFetch(user)
+
+          fetch(`${API}/users/${user.id}`, 
+            method: "PATCH",
+            headers: {
+
+            },
+            body: 
+          )
+
+
           
         // If user is not valid / found, set user to null and record errors
         } else {
@@ -89,31 +87,46 @@ export class Login extends Component {
   };
 
   render() {
-    const { email, password } = this.state;
+    const { email, password, password_confirm } = this.state
     return (
       <div className="login">
         <Segment>
-          <h1>Log In</h1>
+          <h1>Sign Up</h1>
           <Form onSubmit={this.handleSubmit}>
-            <Form.Input
-              placeholder="email"
-              type="text"
-              name="email"
-              value={email}
-              onChange={this.handleChange}
-            />
-            <Form.Input
-              placeholder="password"
-              type="password"
-              name="password"
-              value={password}
-              onChange={this.handleChange}
-            />
-            <Form.Input >
-            <Form.Group>
-              <Grid>
+            <Segment className="signup-segment">
+              <Label attached="top">Enter your Email Address</Label>
+              <Form.Input
+                placeholder="email"
+                type="text"
+                name="email"
+                value={email}
+                onChange={this.handleChange}
+              />
+
+            </Segment>
+            <Segment className="signup-segment">
+            <Label attached="top">Create and Confirm Your Password</Label>
+              <Form.Input
+                placeholder="password"
+                type="password"
+                name="password"
+                value={password}
+                onChange={this.handleChange}
+              />
+              <Form.Input
+                placeholder="password confirmation"
+                type="password"
+                name="password_confirm"
+                value={password_confirm}
+                onChange={this.handleChange}
+              />
+            </Segment>
+            <Segment className="signup-segment" >
+              <Label attached="top">Select User Type</Label>
+              <Form.Group inline>
+              {/* <Grid>
               <Grid.Row >
-                <Grid.Column width={5}>
+                <Grid.Column width={5}> */}
                   <Radio
                     label='Trainer'
                     name='type'
@@ -121,8 +134,8 @@ export class Login extends Component {
                     checked={this.state.type === 'Trainer'}
                     onChange={this.handleChange}
                   />
-                </Grid.Column>
-                <Grid.Column width={5}>
+                {/* </Grid.Column>
+                <Grid.Column width={5}> */}
                   <Radio
                     label='Manager'
                     name='type'
@@ -130,8 +143,8 @@ export class Login extends Component {
                     checked={this.state.type === 'Manager'}
                     onChange={this.handleChange}
                   />
-                </Grid.Column>
-                <Grid.Column width={5}>
+                {/* </Grid.Column>
+                <Grid.Column width={5}> */}
                   <Radio
                     label='Client'
                     name='type'
@@ -139,23 +152,22 @@ export class Login extends Component {
                     checked={this.state.type === 'Client'}
                     onChange={this.handleChange}
                   />
-                </Grid.Column>
+                {/* </Grid.Column>
               </Grid.Row>
-            </Grid>
+            </Grid> */}
             </Form.Group>
-            </Form.Input>
-            <Button type="submit">Log In</Button>
+            </Segment>
+            <Button type="submit">Sign Up</Button>
           </Form>
           <Menu text>
-            <Menu.Item>New User?</Menu.Item><Menu.Item><Link to="/signup">Register Here</Link></Menu.Item>
+            <Menu.Item><Link to="/login">Or Sign In Here</Link></Menu.Item>
           </Menu>
 
           <div>{this.state.errors ? this.handleErrors() : null}</div>
       </Segment>
       </div>
-    );
+    )
   }
 }
 
-
-export default connect(undefined,{ setUser, initialFetch, setLoading})(withRouter(Login));
+export default connect(undefined,{setUser, updateUser})(withRouter(Signup));
