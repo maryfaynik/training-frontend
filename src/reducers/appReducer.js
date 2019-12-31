@@ -4,13 +4,18 @@ const defaultState = {
     activePage: 'dashboard',
     levels: [],
     packages: [],
-    clientPackages: []
+    clientPackages: [],
+    loading: true
   }
   
 function scheduleReducer(state= defaultState, action) {
     let newArray
     let index
     switch (action.type) {
+        case "SET_LOADING":
+            console.log("setting loading to false")
+            return {...state, loading: action.payload}
+
         case "SET_ACTIVEPAGE":
             return {...state, activePage: action.payload}
         
@@ -48,7 +53,7 @@ function scheduleReducer(state= defaultState, action) {
         case "DECREASE_SESSIONS":
             newArray = [...state.clientPackages]
             index = state.clientPackages.findIndex(cp => cp.id === action.payload)
-            newArray[index].sessions -= 1
+            newArray[index].session_count -= 1
             return {...state, clientPackages: [...newArray]}
     
         case "UPDATE_PACKAGE":

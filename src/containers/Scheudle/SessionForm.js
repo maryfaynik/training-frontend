@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Form, Button, Radio, Segment, Label} from 'semantic-ui-react';
+import { Form, Button, Radio, Segment, Label, Header, Divider} from 'semantic-ui-react';
 
 import ClientSearch from './ClientSearch'
-import { isAvailable, getClientPackageOptions } from "../../helpers/generalHelpers"
+import { isAvailable, getClientPackageOptions, getFullName, capitalize} from "../../helpers/generalHelpers"
 import {addSession, updateSession, cancelSession, decreaseSessionCount} from '../../actions/actions'
 import {API} from '../../App'
 import BuySellPackageForm from '../Packages/BuySellPackageForm';
@@ -18,7 +18,8 @@ class SessionForm extends Component {
         length: this.props.editSession.length,
         trainer_id: this.props.editSession.trainer_id,
         client_id: this.props.editSession.client_id,
-        client_package_id: null,
+        client_package_id: this.props.editSession.client_package_id,
+        status: this.props.editSession.status,
         showPackForm: false,
         errors: []
     }
@@ -48,6 +49,7 @@ class SessionForm extends Component {
                 daytime: dayAndTime,
                 trainer_id: this.state.trainer_id,
                 client_id: this.state.client_id,
+                client_package_id: this.state.client_package_id,
                 status: "scheduled",
                 length: parseInt(this.state.length)
             }
@@ -107,7 +109,7 @@ class SessionForm extends Component {
                             // Update the number of sessions left on client's package
                             let cp = this.props.clientPackages.find(cp => cp.id === this.state.client_package_id)
                             let obj = {
-                                sessions: cp.sessions - 1
+                                session_count: cp.session_count - 1
                             }
                             
                             fetch(`${API}/client_packages/${this.state.client_package_id}`, {
@@ -135,13 +137,15 @@ class SessionForm extends Component {
         }       
     }
 
-    handleCancel = (e) =>{
+    handleStatus = (e, status) =>{
 
-        //eslint-disable-next-line
-        if(window.confirm("Are you sure you want to cancel this session?") === false) return 
+        if(status === "cancelled"){
+            //eslint-disable-next-line
+            if(window.confirm("Are you sure you want to cancel this session?") === false) return 
+        }
         
         let obj = {
-            status: "cancelled"
+            status: status
         }
 
         fetch(`${API}/sessions/${this.state.id}`, {
@@ -193,7 +197,7 @@ class SessionForm extends Component {
 
     renderPackageChoices = () => {
         let packOptions = getClientPackageOptions(this.state.client_id, this.props.clientPackages)
-        if(packOptions.length < 1){
+        if(packOptions.length < 1 && this.props.isNew){
             return <Fragment>
                     <Button size="mini" secondary onClick={this.toggleForm}>Buy Sessions</Button>
                 </Fragment>
@@ -209,17 +213,63 @@ class SessionForm extends Component {
 
     render(){
         console.log("session form state = ", this.state)
+        let {isNew} = this.props
         return (
             this.state.showPackForm ? this.renderPackageForm()
             :
             <div className= 'outer-popup'>
                 <div className="inner-popup">
+                    <Header as="h1"> {isNew ? "Create" : "Edit"} Session</Header>
                     <Form className='session-form' id="session-form" value={this.state.id} onSubmit={this.handleSubmit}>
-                        <Form.Group widths='equal'>
-                            <Form.Input onChange={this.handleChange} value={this.state.date} name="date" label='Day' type="date"/>
-                            <Form.Input onChange={this.handleChange} value={this.state.time} name="time" label='Time' type="time"/>
+                        <Form.Group>
+                            <Segment className="client-trainer-select" >
+                                <b>Status: { isNew? <span className="new-session">New</span> : <span className={`${this.state.status}-session`}>{capitalize(this.state.status)}</span>}</b>
+                            </Segment>
                         </Form.Group>
-                        <Form.Group> 
+                        <Form.Group widths="equal">
+                            {isNew ? 
+                                <Segment className="client-trainer-select" >
+                                    <Label attached="top">Trainer</Label>
+                                    <Form.Select
+                                        onChange={this.handleChange}
+                                        value={this.state.trainer_id}
+                                        name="trainer_id"
+                                        options={this.props.trainerOptions}
+                                        placeholder='Select Trainer'
+                                    />
+                                </Segment>
+                            :
+                                <Segment className="client-trainer-select" >
+                                    <b>Trainer: </b>{getFullName(this.props.allTrainers.find(t => t.id === this.state.trainer_id))}
+                                </Segment>
+                            }
+                        </Form.Group>
+                        <Form.Group>
+                            { isNew ? 
+                                 <Segment className="client-trainer-select" >
+                                    <Label attached="top">Client</Label>
+                                    <ClientSearch client_id={this.state.client_id} clients={this.props.allClients} setClient={(id) => this.setState({client_id: id})}/>
+                                    {this.state.client_id !== undefined ? 
+                                     this.renderPackageChoices()
+                                    : null}
+                                </Segment>
+                            :
+                                <Segment className="client-trainer-select">
+                                    <b>Client: </b>{getFullName(this.props.allClients.find(c => c.id === this.state.client_id))}
+                                </Segment>
+                            }
+                            
+                        </Form.Group> 
+                        
+                        <Form.Group inline>
+                            <Label horizontal>Date</Label>
+                            <Form.Input onChange={this.handleChange} value={this.state.date} name="date" type="date"/>
+                
+                            <Label>Time</Label>
+                            <Form.Input onChange={this.handleChange} value={this.state.time} name="time" type="time"/>
+                        </Form.Group>
+                        <Form.Group > 
+                            <Label>Length</Label>
                             <Form.Field>
                                 <Radio
                                     label='30 min'
@@ -247,32 +297,15 @@ class SessionForm extends Component {
                                     onChange={this.handleChange}
                                 />
                             </Form.Field>
-                        </Form.Group> 
-                        <Form.Group>
-                            <Segment>
-                                <Label attached="top">Trainer</Label>
-                                <Form.Select
-                                    onChange={this.handleChange}
-                                    value={this.state.trainer_id}
-                                    name="trainer_id"
-                                    options={this.props.trainerOptions}
-                                    placeholder='Select Trainer'
-                                />
-                            </Segment>
-                        </Form.Group>
-                        <Form.Group>
-                            <Segment>
-                                <Label attached="top">Client</Label>
-                                <ClientSearch client_id={this.state.client_id} clients={this.props.allClients} setClient={(id) => this.setState({client_id: id})}/>
-                                {this.state.client_id !== undefined ? 
-                                    this.renderPackageChoices()
-                                : null}
-                            </Segment>
-                        </Form.Group>
+                        </Form.Group>                     
                     </Form>
                     <p>
+                        { this.props.isNew ? null : <Button onClick={(e) => this.handleStatus(e, "cancelled")}>Cancel Session</Button>}
+                        { this.props.isNew ? null : <Button onClick={(e) => this.handleStatus(e, "no-show")}>Mark No-Show</Button>}
+                        { this.props.isNew ? null : <Button onClick={(e) => this.handleStatus(e, "complete")}>Mark Completed</Button>}
+                    </p>
+                    <p>    
                         <Button primary type="submit" form={"session-form"}>{this.props.isNew ? "Book Session" : "Save Changes"}</Button>
-                        { this.props.isNew ? null : <Button onClick={this.handleCancel}>Cancel Session</Button>}
                         <Button onClick={this.props.goBack}>Go Back</Button>
                     </p>
 

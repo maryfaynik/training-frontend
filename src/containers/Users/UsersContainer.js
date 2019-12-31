@@ -1,34 +1,33 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import {Button, Card, Menu, Input} from 'semantic-ui-react';
+import {Button, Card, Menu, Input, IconGroup} from 'semantic-ui-react';
 
 import {getFullName, getAge, getLevelOptions} from '../../helpers/generalHelpers'
-import {updateUser, deleteUser} from '../../actions/actions'
-import AddTrainerForm from './AddTrainerForm.js'
-import AddClientForm from './AddTrainerForm.js'
-import EditClientForm from '../../components/Users/EditClientForm'
-import EditTrainerForm from '../../components/Users/EditTrainerForm'
+import { deleteUser} from '../../actions/actions'
+import UserForm from './UserForm.js'
 import {API} from '../../App'
+
+const defaultUser = {
+    first_name: "",
+    last_name: "",
+    dob: new Date(),
+    email: "",
+    phone: "",
+    level: {
+        id: ""
+    },
+}
 
 class UsersContainer extends Component {
 
     state = {
-        addForm: false,
-        editForm: false,
-        editUser: {},
+        showForm: false,
+        enterNew: true,
+        editUser: defaultUser,
         errors: [],
         path: this.props.userType.toLowerCase() + "s",
         searchName: ""
-    }
-
-    goBack = () => {
-        this.setState({
-            addForm: false,
-            editForm: false,
-            editUser: {},
-            errors: []
-        })
     }
 
     deleteUser = (e) => {
@@ -54,70 +53,28 @@ class UsersContainer extends Component {
             })
     }
 
-    // EDIT FORM ACTIONS -------------------
+    //Form Actions -------------------
 
-    updateEditUser = (key, value) => {
+    goBack = () => {
         this.setState({
-            editUser: {
-                ...this.state.editUser,
-                [key]: value
-            }
-        })
-    }
-
-    toggleEditForm = (e) => {
-        let selectedUser = {}
-        if(!this.state.editUser.id){
-            selectedUser = this.props.all.find(u => u.id === parseInt(e.target.value))
-        }
-        
-        this.setState({
-            editForm: !this.state.editForm,
-            addForm: false,
-            editUser: selectedUser,
+            showForm: false,
+            enterNew: true,
+            editUser: defaultUser,
             errors: []
         })
     }
 
-    submitEdit = () => {
-        let updatedUser = {
-            user: {
-                id: this.state.editUser.id,
-                first_name: this.state.editUser.first_name,
-                last_name: this.state.editUser.last_name,
-                dob: this.state.editUser.dob,
-                email: this.state.editUser.email,
-                phone: this.state.editUser.phone
-            }
+    toggleForm = (e) => {
+        let editUser = defaultUser
+        let enterNew = true
+        if(!!e && e.target.value ){
+            editUser = this.props.allUsers.find(u => u.id === parseInt(e.target.value))
+            enterNew = false
         }
-
-        fetch(`${API}/${this.state.path}/${this.state.editUser.id}`, {
-            method: "PATCH",
-            headers: {
-                "content-type": "application/json",
-                "accepts": "application/json"
-            },
-            body: JSON.stringify(updatedUser)
-        }).then (resp => resp.json())
-            .then(data => {
-                if(data.errors){
-                    this.setState({
-                        errors: data.errors.errors,
-                    });
-                }else{
-                    this.toggleEditForm()
-                    this.props.updateUser(data.user, `${this.props.userType}`)
-                }
-            })
-    }
-
-    
-    // New Form Actions -------------------
-
-    toggleNewForm = (e) => {
         this.setState({
-            addForm: !this.state.addForm,
-            editForm: false,
+            showForm: !this.state.showForm,
+            editUser: editUser,
+            enterNew: enterNew,
             errors: []
         })
     }
@@ -130,40 +87,35 @@ class UsersContainer extends Component {
     }
 
     // RENDERS ------------------------------
-    renderAddForm(){
-        return (this.props.userType === "Trainer" ? 
-            <AddTrainerForm toggleForm={this.toggleNewForm} levelOptions={getLevelOptions(this.props.levels)} goBack={this.goBack}/>
-            : <AddClientForm toggleForm={this.toggleNewForm} goBack={this.goBack}/> 
-        )
+
+    renderForm(){
+        if(this.state.enterNew){
+            return <UserForm isNew={true} editUser={this.state.editUser} toggleForm={this.toggleForm} levelOptions={getLevelOptions(this.props.levels)} goBack={this.goBack} userType={this.props.userType}/>
+        }else{
+            return <UserForm isNew={false} editUser={this.state.editUser} toggleForm={this.toggleForm} levelOptions={getLevelOptions(this.props.levels)} goBack={this.goBack} userType={this.props.userType}/>
+        }
     }
 
     renderAddButton(){
         return (this.props.userType === "Trainer" ? 
-            <p><Button onClick={this.toggleNewForm}>Add A Trainer</Button></p>
-            : <p><Button onClick={this.toggleNewForm}>Add A Client</Button></p>
-        )
-    }
-
-    renderEditForm(){
-        return (this.props.userType === "Trainer" ? 
-            <EditTrainerForm trainer={this.state.editUser} errors={this.state.errors} 
-            levelOptions={getLevelOptions(this.props.levels)} 
-            updateEditTrainer={this.updateEditUser} 
-            submitEdit={this.submitEdit} goBack={this.goBack}/> 
-            : 
-            <EditClientForm client={this.state.editUser} errors={this.state.errors} 
-                updateEditClient={this.updateEditUser} 
-                submitEdit={this.submitEdit} goBack={this.goBack}/> 
+            <p><Button onClick={this.toggleForm}>Add A Trainer</Button></p>
+            : <p><Button onClick={this.toggleForm}>Add A Client</Button></p>
         )
     }
 
     renderUsers = () => {
         const type = this.props.userType
-        let all = this.props.all
+   
+        //sort the users alphabetically and filter if needed
+        let all = this.props.allUsers
+        all.sort((a, b) => a.last_name.localeCompare(b.last_name))
+
         if(this.state.searchName !== ""){
             let key = this.state.searchName.toLowerCase()
             all = all.filter(user => getFullName(user).toLowerCase().includes(key))
         }
+
+        // Display all users
         if( !this.state.editForm && !this.state.addForm){
             return all.map(user => {
                 return (
@@ -186,7 +138,7 @@ class UsersContainer extends Component {
                         </Card.Content>
                         <Card.Content extra>
                             <div>
-                            <Button value={user.id} onClick={this.toggleEditForm}>Edit</Button>
+                            <Button value={user.id} onClick={this.toggleForm}>Edit</Button>
                             <Button value={user.id} onClick={this.deleteUser}>Delete</Button>
                             </div>
                         </Card.Content>
@@ -205,8 +157,7 @@ class UsersContainer extends Component {
         return (
             
             <div className="train-container">
-                {this.state.addForm ?  this.renderAddForm() : null}
-                {this.state.editForm ? this.renderEditForm() : null }   
+                {this.state.showForm ?  this.renderForm() : null}
                 {this.renderAddButton()}
                 <Menu.Item>
                     <Input icon='search' placeholder='Search by Name...'
@@ -232,6 +183,6 @@ const msp = (state) => {
         levels: state.app.levels,
     }
 }
-export default connect(msp, {updateUser, deleteUser})(withRouter(UsersContainer));
+export default connect(msp, {deleteUser})(withRouter(UsersContainer));
 
 

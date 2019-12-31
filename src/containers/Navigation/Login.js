@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 import { Form, Button, Grid, Radio } from 'semantic-ui-react';
 import { API } from '../../App';
 
-import {setUser, initialFetch} from '../../actions/actions'
+import {setUser, initialFetch, setLoading} from '../../actions/actions'
 
 export class Login extends Component {
 
@@ -58,7 +58,7 @@ export class Login extends Component {
 
           //set the user in redux
           this.props.setUser(user);
-
+          this.props.setLoading(true)
           console.log("fetching all the shitsssss LOGIN")
           //fetch this user's clients, sessions, and trainers
           this.props.initialFetch(user)
@@ -154,4 +154,4 @@ export class Login extends Component {
 }
 
 
-export default connect(undefined,{ setUser, initialFetch })(withRouter(Login));
+export default connect(undefined,{ setUser, initialFetch, setLoading})(withRouter(Login));

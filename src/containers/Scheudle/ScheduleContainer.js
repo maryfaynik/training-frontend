@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar'
-import { Dropdown, Icon, Button, Menu } from 'semantic-ui-react'
+import { Dropdown, Icon, Button, Menu, Input, Label} from 'semantic-ui-react'
 
 import {getTrainerOptions, getClientOptions, getEvents, getResources} from '../../helpers/scheduleHelpers'
 import {getDayString, getTimeString, findClientByName} from '../../helpers/generalHelpers'
@@ -17,6 +17,7 @@ const defaultSession = {
     length: "60",
     trainer_id: undefined,
     client_id: undefined,
+    status: "scheduled"
 }
 
 class ScheduleContainer extends Component {
@@ -30,6 +31,8 @@ class ScheduleContainer extends Component {
         editSession: {...defaultSession},
         enterNew: true
     }
+  
+
 
     // update arrays of data in state anytime something changes
     // (i.e. a drop-down, view change, etc.)
@@ -58,14 +61,12 @@ class ScheduleContainer extends Component {
         }
     }
 
-    // call anytime the component re-renders
-    // componentDidUpdate(){
-    //     this.setData()
-    // }
     componentDidMount(){
         this.setData()
     }
 
+
+    // FORM ACTIONS ----------------------------------
     toggleForm = (e) => {
         this.setState({
             showForm: !this.state.showForm,
@@ -82,6 +83,7 @@ class ScheduleContainer extends Component {
         })
     }
 
+    // Calendar handlers ---------------------------------
     handleSlotSelect = (e) => {
         console.log("clicked on this slot...")
         console.dir(e)
@@ -90,6 +92,7 @@ class ScheduleContainer extends Component {
             time: getTimeString(e.start),
             length: "60",
             trainer_id: e.resourceId,
+            status: "new",
             client_id: undefined,
         }
         
@@ -107,6 +110,7 @@ class ScheduleContainer extends Component {
     handleEventSelect = (e) => {
         console.dir(e)
         let client = findClientByName(e.title, this.props.allClients)
+        let session = this.props.allSessions.find(s => s.id === e.id)
 
         let newSession = {
             id: e.id,
@@ -114,6 +118,7 @@ class ScheduleContainer extends Component {
             time: getTimeString(e.start),
             length: "60",
             trainer_id: e.resourceId,
+            status: session.status,
             client_id: client.id
         }
       
@@ -142,6 +147,7 @@ class ScheduleContainer extends Component {
         })
     }
 
+    // RENDERS ---------------------------------
     render(){
     
         const {user, allTrainers, allClients, allSessions} = this.props
@@ -153,25 +159,36 @@ class ScheduleContainer extends Component {
         }else{
             return (
                 <div className="sched-container">
-                    {this.state.showForm ? <SessionForm editSession={this.state.editSession} trainerOptions={getTrainerOptions(allTrainers)} clientOptions={getClientOptions(allClients)} goBack={this.goBack} toggleForm={this.toggleForm} isNew={this.state.enterNew}/> 
-                    : <Button onClick={this.toggleForm}><Icon name = "plus"/> Add Session</Button>}
+                    {this.state.showForm ? <SessionForm editSession={this.state.editSession} trainerOptions={getTrainerOptions(allTrainers)} clientOptions={getClientOptions(allClients)} goBack={this.goBack} toggleForm={this.toggleForm} isNew={this.state.enterNew}/> : null}
                     
-                    { this.state.userType === "Manager" ? 
-                        <Menu secondary>
-                            <Menu.Item
-                            name='Filter By Trainer'
-                            active={false}
-                            />
-                            <Menu.Item>
-                            <Dropdown
-                                placeholder = "Select a Trainer"
-                                selection
-                                onChange={this.handleTrainerSelect}
-                                options={[ {key: "all", text: "Show All", value: "all"}, ...getTrainerOptions(allTrainers)]}/>
-                            </Menu.Item>
+                    <Menu id="schedule-menu" secondary>
+                        <Menu.Item size="small" onClick={this.toggleForm}><Icon name = "plus"/> Add Session</Menu.Item>
+                        { this.state.userType === "Manager" ? 
+                            // <Menu secondary>
+                            //     <Menu.Item
+                            //     name='Filter By Trainer'
+                            //     active={false}
+                            //     />
+                            //     <Menu.Item>
+                            //     <Dropdown
+                            //         placeholder = "Select a Trainer"
+                            //         selection
+                            //         onChange={this.handleTrainerSelect}
+                            //         options={[ {key: "all", text: "Show All", value: "all"}, ...getTrainerOptions(allTrainers)]}/>
+                            //     </Menu.Item>
 
-                        </Menu>
-                    : null }
+                            <Menu.Menu position="right">
+                            <Menu.Item>
+                                <Dropdown
+                                    text="Filter By Trainer"
+                                    icon="filter"
+                                    selection
+                                    onChange={this.handleTrainerSelect}
+                                    options={[ {key: "all", text: "Show All", value: "all"}, ...getTrainerOptions(allTrainers)]}/>
+                            </Menu.Item>
+                            </Menu.Menu>
+                        : null }
+                    </Menu>
 
                     <Calendar className="calendar"
                         localizer= {localizer}

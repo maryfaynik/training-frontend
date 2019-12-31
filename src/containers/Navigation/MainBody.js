@@ -22,13 +22,13 @@ class MainBody extends Component {
   renderClients = () => {
     if(!this.props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
       // return <ClientsContainer/>
-      return <UsersContainer all={this.props.allClients} userType="Client"/>
+      return <UsersContainer allUsers={this.props.allClients} userType="Client"/>
   }
 
   renderTrainers = () => {
     if(!this.props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
       // return <TrainersContainer/>
-      return <UsersContainer all={this.props.allTrainers} userType="Trainer"/>
+      return <UsersContainer allUsers={this.props.allTrainers} userType="Trainer"/>
   }
 
   renderSchedule = () => {

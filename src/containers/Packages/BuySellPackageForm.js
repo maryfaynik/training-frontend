@@ -40,7 +40,7 @@ class BuySellPackageForm extends Component {
             client_package: {
                 client_id: this.state.client_id,
                 package_id: this.state.package_id,
-                sessions: pack.session_count,
+                session_count: pack.session_count,
                 expiration: exp
             }
         }

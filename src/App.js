@@ -4,15 +4,16 @@ import { withRouter } from 'react-router-dom'
 
 import NavBar from './components/Navigation/NavBar'
 import Main from './components/Navigation/Main'
+import Loading from './components/Navigation/Loading'
 
-import {initialFetch, setUser} from './actions/actions'
+import {initialFetch, setUser, setLoading} from './actions/actions'
 
 export const API = "http://localhost:3000/api/v1"
 
 class App extends Component {
 
   state= {
-
+    
   }
 
   componentDidMount(){
@@ -43,6 +44,8 @@ class App extends Component {
           }
 
         })
+    }else{
+      this.props.setLoading(false)
     }
   
   }
@@ -51,8 +54,7 @@ class App extends Component {
     return (
       <div className="app">
         <NavBar/>
-        {/* <Divider section/> */}
-        <Main/>
+        {this.props.loading ? <Loading /> : <Main/>}
       </div>
     )
   }
@@ -61,9 +63,9 @@ class App extends Component {
 
 const msp = (state) =>{
   return {
-
+    loading: state.app.loading
   }
 }
 
 
-export default connect(msp, {initialFetch, setUser})(withRouter(App));
+export default connect(msp, {initialFetch, setUser, setLoading})(withRouter(App));

@@ -1,3 +1,4 @@
+
 export const getFullName = (person) => {
     return `${person.first_name} ${person.last_name}`
 }
@@ -20,6 +21,53 @@ export const getTimeString = (date) =>{
     return `${hrs}:${mins}`
 }
 
+export const getSessionsSold = (packages) =>{
+    console.log("packages =", packages)
+    if(packages.length < 1 ) return 0
+    let sessions = packages.map( pack => pack.sessions)
+    return sessions.reduce((sum, count) => sum+count)
+}
+
+export const getSessionCount = (backDate, user) =>{
+    return user.sessions.filter(session => new Date(backDate) <= new Date(session.daytime)).length
+}
+
+export const getTopPerformer = (users, backDate ) => {
+
+    let user = users.reduce( (max, current) => getSessionCount(backDate, max) > getSessionCount(backDate, current) ? max : current)
+
+    return {
+        user: user,
+        sessions: getSessionCount(backDate, user)
+    }
+}
+
+export const isNewClient = (client, backDate ) => {
+    return client.sessions.find(session => new Date(session.daytime) < new Date(backDate)) === undefined
+}
+
+export const capitalize = (string) => {
+    return string[0].toUpperCase() + string.slice(1)
+} 
+
+export const getTimes = () => {
+    let year = new Date()
+    year.setDate(1)
+    year.setMonth(0)
+
+    let month = new Date()
+    month.setDate(1)
+
+    let week = new Date()
+    week.setDate(week.getDate() - week.getDay())
+    
+    return {
+        year: year,
+        month: month,
+        week: week
+    }
+}
+
 export const overlap = (start1, len1, start2, len2) => {
     start1 = new Date(start1)
  
@@ -28,7 +76,7 @@ export const overlap = (start1, len1, start2, len2) => {
     let end2 = new Date(start2)
     end2.setMinutes(end2.getMinutes() + len2)
 
-
+    // console.log("checking... one: ", start1, " - ", end1, " and two: ", start2, " - ", end2)
     
     return (start1 >= start2 && start1 < end2) || (end1 > start2 && end1 <= end2)
 }
@@ -99,16 +147,17 @@ export const getPackageOptions = (packages) => {
 export const getClientPackageOptions = (client_id, all_cps) => {
     let cps =  all_cps.filter(client_package => client_package.client.id === client_id)
 
-    cps = cps.filter(client_package => client_package.sessions > 0)
-
+    cps = cps.filter(client_package => client_package.session_count > 0)
+    console.log("before expiration:", cps)
     cps = cps.filter(client_package => new Date(client_package.expiration) >= new Date())
+    console.log("after expiration:", cps)
     
     return cps.map(cp => {
         console.log("mapping ", cp, " to an option")
         return {
             key: cp.id,
             value: cp.id,
-            text: cp.package.title
+            text: `${cp.package.title} (${cp.session_count} remaining)`
         }
     })
       

@@ -6,7 +6,7 @@ export function setUser(user){
         return {type: "SET_USER", payload: user }
     }
 
-export function setUsers(users, userType){
+export function setUsers(dispatch, users, userType){
     return {type: "SET_USERS", payload: {users, userType} }
 }
     
@@ -30,6 +30,10 @@ export function setActivePage(page){
     return {type: "SET_ACTIVEPAGE", payload: page }
 }
 
+export function setLoading(flag){
+    return {type: "SET_LOADING", payload: flag}
+}
+
 // GETTERS ==================================
 
 export function initialFetch(user) {
@@ -46,6 +50,7 @@ export function initialFetch(user) {
               setUsers(dispatch, [user], "Client")
               break
             default: // Get all of everything...for manager
+                console.log("hereerererr")
               getClients(dispatch)
               getSessions(dispatch)
               getTrainers(dispatch)
@@ -59,6 +64,8 @@ export function initialFetch(user) {
           // get all client-packages
           getClientPackages(dispatch)
 
+
+          
     }
 }
 
@@ -100,7 +107,8 @@ export function getClients(dispatch, id = null){
         fetch(url)
         .then(res => res.json())
         .then(data => {
-            dispatch(setUsers(data.users, "Client"))
+            dispatch(setUsers(dispatch, data.users, "Client"))
+            dispatch(setLoading(false))
         })
 }
 
@@ -109,7 +117,7 @@ export function getTrainers(dispatch, id = null){
         fetch(url)
         .then(res => res.json())
         .then(data => {
-            dispatch(setUsers(data.users, "Trainer"))
+            dispatch(setUsers(dispatch, data.users, "Trainer"))
         })
 }
 
