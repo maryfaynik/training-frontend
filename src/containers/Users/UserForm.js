@@ -47,6 +47,7 @@ class UserForm extends Component {
         }
 
         if(this.props.userType === "Trainer") newUser.user.level_id = this.state.level
+        if(isNew) newUser.password = "password"
 
         let base_url = this.props.userType === "Trainer" ? "trainers" : "clients"
         let end_url = isNew ? "" : `/${this.state.id}`

@@ -98,6 +98,10 @@ class PackagesContainer extends Component {
                 package_button: "Sell Package",
                 name: "sell"
             },
+            "Trainer": {
+                package_button: "Sell Package",
+                name: "sell"
+            },
             "Client": {
                 package_button: "Purchase Package",
                 name: "buy"
@@ -113,7 +117,7 @@ class PackagesContainer extends Component {
                             subheader={`${pack.session_count} ${pack.level.name} session${pack.session_count > 1 ? "s" : "" } | Price: $${pack.price}.00`}/>
                         <span>
                             {type === "Manager" ? <Button name="edit" onClick={(e) => this.handleClick(e, pack.id)}>Edit Package</Button> : null}
-                            {type === "Trainer" ? null : <Button name={options[type].name} onClick={(e) => this.handleClick(e, pack.id)}>{options[type].package_button}</Button>}
+                            <Button name={options[type].name} onClick={(e) => this.handleClick(e, pack.id)}>{options[type].package_button}</Button>
                         </span>
                     </Grid.Column>
                     </Grid.Row>

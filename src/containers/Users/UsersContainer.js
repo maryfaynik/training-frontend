@@ -136,12 +136,14 @@ class UsersContainer extends Component {
                                 This will be bio!
                             </Card.Description>
                         </Card.Content>
-                        <Card.Content extra>
-                            <div>
-                            <Button value={user.id} onClick={this.toggleForm}>Edit</Button>
-                            <Button value={user.id} onClick={this.deleteUser}>Delete</Button>
-                            </div>
-                        </Card.Content>
+                        {type === "Manager" ?
+                            <Card.Content extra>
+                                <div>
+                                <Button value={user.id} onClick={this.toggleForm}>Edit</Button>
+                                <Button value={user.id} onClick={this.deleteUser}>Delete</Button>
+                                </div>
+                            </Card.Content>
+                        : null}
                     </Card>
                 )
             })
