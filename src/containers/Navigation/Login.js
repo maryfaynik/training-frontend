@@ -50,6 +50,8 @@ export class Login extends Component {
     
         // If the user is valid, log them in...
         if (data.data) {
+          this.props.setLoading(true)
+          
           let user = data.data
 
           //cache the info
@@ -58,7 +60,6 @@ export class Login extends Component {
 
           //set the user in redux
           this.props.setUser(user);
-          this.props.setLoading(true)
           console.log("fetching all the shitsssss LOGIN")
           //fetch this user's clients, sessions, and trainers
           this.props.initialFetch(user)

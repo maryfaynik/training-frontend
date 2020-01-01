@@ -13,7 +13,7 @@ export class Signup extends Component {
     password: '',
     password_confirm: '',
     type: 'Client',
-    errors: '',
+    errors: [],
   };
 
   handleChange = (e, {value}) => {
@@ -32,43 +32,70 @@ export class Signup extends Component {
     event.preventDefault();
     const { email, password, password_confirm, type } = this.state;
 
+    if(password !== password_confirm){
+      this.setState({
+        errors: ["Password and password confirmation must match!"]
+      })
+      return 
+    }
+
     fetch(`${API}/finduser/${email}`)
       .then(res => res.json())
       .then(data => {
 
         // If the user is valid, log them in and save their password to DB...
         if (data.user) {
+
           let user = data.data
 
-          //cache the info
-          console.log("setting localstorage id to ", user.id)
-          localStorage.user_id = user.id;
+          let pwObject = {
+            password: this.state.password
+          }
 
-          //set the user in redux
-          this.props.setUser(user);
-          this.props.setLoading(true)
-          console.log("fetching all the shitsssss LOGIN")
-          //fetch this user's clients, sessions, and trainers
-          this.props.initialFetch(user)
-
-          fetch(`${API}/users/${user.id}`, 
+          fetch(`${API}/users/${user.id}`, {
             method: "PATCH",
             headers: {
-
+                "content-type": "application/json",
+                "accepts": "application/json"
             },
-            body: 
-          )
+            body: JSON.stringify(pwObject)
+          })
+          .then(resp => resp.json())
+          .then(data => {
+            console.log("got back ", data)
 
+            if(data.errors){
+              this.props.setUser({});
 
+              localStorage.removeItem("user_id")
+              
+              this.setState({
+                errors: [...data.errors],
+              });
+
+            }else{
+              //cache the user info
+              console.log("setting localstorage id to ", user.id)
+              localStorage.user_id = user.id;
+  
+              //set the user in redux
+              this.props.setUser(user);
+              this.props.setLoading(true)
+              console.log("fetching all the shitsssss LOGIN")
+              //fetch this user's clients, sessions, and trainers
+              this.props.initialFetch(user)
+            }
+
+          })     
           
-        // If user is not valid / found, set user to null and record errors
+        // If user is not found via email, set user to null and record errors
         } else {
           this.props.setUser({});
 
           localStorage.removeItem("user_id")
           
           this.setState({
-            errors: data.errors,
+            errors: [...data.errors],
           });
         }
       })
@@ -91,7 +118,7 @@ export class Signup extends Component {
     return (
       <div className="login">
         <Segment>
-          <h1>Sign Up</h1>
+          <h1>Register</h1>
           <Form onSubmit={this.handleSubmit}>
             <Segment className="signup-segment">
               <Label attached="top">Enter your Email Address</Label>
