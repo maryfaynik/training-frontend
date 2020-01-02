@@ -5,13 +5,13 @@ import { Segment, Header, Icon} from 'semantic-ui-react'
 
 import { getUserFromId } from '../helpers/generalHelpers'
 import Landing from './Landing'
-import ScheduleContainer from '../containerssss/schedule/ScheduleContainer'
-import UsersContainer from '../containerssss/users/UsersContainer';
-import UserProfile from '../containerssss/users/UserProfile';
-import PackagesContainer from '../containerssss/packagesssss/PackagesContainer';
-import Settings from '../containerssss/navigationnnn/Settings';
-import Signup from '../containerssss/navigationnnn/Signup'
-import Login from '../containerssss/navigationnnn/Login'
+import ScheduleContainer from '../containers/schedule/ScheduleContainer'
+import UsersContainer from '../containers/users/UsersContainer';
+import UserProfile from '../containers/users/UserProfile';
+import PackagesContainer from '../containers/packages/PackagesContainer';
+import Settings from '../containers/navigation/Settings';
+import Signup from '../containers/navigation/Signup'
+import Login from '../containers/navigation/Login'
 
 const MainBody =(props) => {
 
