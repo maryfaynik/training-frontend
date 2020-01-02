@@ -11,6 +11,13 @@ export const getDayString = (date) =>{
     return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
 }
 
+export const getUserFromId = (id, all) => {
+    console.log('id =', id)
+    console.log('all = ', all)
+    return all.find(t => t.id === id)
+}
+
+
 export const getTimeString = (date) =>{
     let hrs = date.getHours() + ""
 
@@ -24,7 +31,7 @@ export const getTimeString = (date) =>{
 export const getSessionsSold = (packages) =>{
     console.log("packages =", packages)
     if(packages.length < 1 ) return 0
-    let sessions = packages.map( pack => pack.sessions)
+    let sessions = packages.map( pack => pack.session_count)
     return sessions.reduce((sum, count) => sum+count)
 }
 
@@ -52,11 +59,10 @@ export const capitalize = (string) => {
 
 export const getTimes = () => {
     let year = new Date()
-    year.setDate(1)
-    year.setMonth(0)
+    year.setFullYear(year.getFullYear() -1)
 
     let month = new Date()
-    month.setDate(1)
+    month.setMonth(month.getMonth()-1)
 
     let week = new Date()
     week.setDate(week.getDate() - week.getDay())

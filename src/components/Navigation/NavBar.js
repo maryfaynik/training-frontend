@@ -23,7 +23,7 @@ const NavBar = props => {
           <Menu.Item
             name='home'
             onClick={handleItemClick}
-          >ON TARGET<Icon name="target"/></Menu.Item>
+          ><Icon name="target"/></Menu.Item>
         </Menu.Menu>  
         <Menu.Menu position='right'>
           <Dropdown item icon='user' simple>
