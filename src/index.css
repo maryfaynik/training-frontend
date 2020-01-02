@@ -165,3 +165,7 @@ form {
   align-items: center;
   justify-content: center;
 }
+
+.settings-segment {
+  width: 95%;
+}

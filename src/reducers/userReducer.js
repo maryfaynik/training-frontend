@@ -11,6 +11,7 @@ function userReducer(state = defaultState, action) {
     switch (action.type) {
       
       case "SET_USER":
+        console.log("setting user in reducer")
         return {...state, user: action.payload}
 
       case "SET_USERS":
@@ -24,12 +25,15 @@ function userReducer(state = defaultState, action) {
         return {...state, [key]: [...state[key], action.payload.user]} 
 
       case "UPDATE_USER":
-       
-        key = `all${action.payload.userType}s`
-        newArray = [...state[key]]
-        index = newArray.findIndex(user => user.id === action.payload.user.id)
-        newArray[index] = {...action.payload.user}
-        return {...state, [key]: [...newArray]}
+        if(action.payload.userType === "Manager"){
+          return {...state, user: action.payload.user}
+        }else{
+          key = `all${action.payload.userType}s`
+          newArray = [...state[key]]
+          index = newArray.findIndex(user => user.id === action.payload.user.id)
+          newArray[index] = {...action.payload.user}
+          return {...state, [key]: [...newArray]}
+        }
 
       case "DELETE_USER":
         key = `all${action.payload.userType}s`

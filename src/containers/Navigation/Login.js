@@ -4,7 +4,7 @@ import { withRouter, Link } from 'react-router-dom'
 import { Form, Button, Grid, Radio, Segment, Menu } from 'semantic-ui-react';
 import { API } from '../../App';
 
-import {setUser, initialFetch, setLoading} from '../../actions/actions'
+import {setUser, initialFetch, setAllLoading, setUserLoading} from '../../actions/actions'
 
 export class Login extends Component {
 
@@ -50,8 +50,8 @@ export class Login extends Component {
     
         // If the user is valid, log them in...
         if (data.data) {
-          this.props.setLoading(true)
-          
+          this.props.setAllLoading(true)
+          this.props.setUserLoading(true)
           let user = data.data
 
           //cache the info
@@ -67,7 +67,7 @@ export class Login extends Component {
         // If user is not valid / found, set user to null and record errors
         } else {
           this.props.setUser({});
-
+    
           localStorage.removeItem("user_id")
           
           this.setState({
@@ -158,5 +158,13 @@ export class Login extends Component {
   }
 }
 
+const mdp = (dispatch) =>{
+    return {
+      initialFetch: (user) => dispatch(initialFetch(user)),
+      setUser: (user) => dispatch(setUser(user, dispatch)),
+      setUserLoading: (flag) => dispatch(setUserLoading(flag)),
+      setAllLoading: (flag) => dispatch(setUserLoading(flag))
+    }
+}
 
-export default connect(undefined,{ setUser, initialFetch, setLoading})(withRouter(Login));
+export default connect(undefined, mdp)(withRouter(Login));

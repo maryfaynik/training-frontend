@@ -93,14 +93,14 @@ const SideBar = (props) => {
                 {info.packages.name}
                 </Menu.Item>
 
-                <Menu.Item
+                {/* <Menu.Item
                 value="settings"
                 as={Link} to={`/settings`}
                 onClick = {handleClick}
                 active={props.activeItem === 'settings'}
                 >
                 Settings
-                </Menu.Item>
+                </Menu.Item> */}
             
             </Menu>
         </div>

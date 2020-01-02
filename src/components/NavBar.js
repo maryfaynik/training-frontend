@@ -7,8 +7,11 @@ import { setUser } from '../actions/actions'
 
 const NavBar = props => {
   
-  const handleItemClick = () =>{
-    
+  const handleHomeClick = () =>{
+    props.history.push('/')
+  }
+  const handleAcctClick = () =>{
+    props.history.push('/settings')
   }
 
   const handleLogout = () =>{
@@ -22,7 +25,7 @@ const NavBar = props => {
         <Menu.Menu position="left">
           <Menu.Item
             name='home'
-            onClick={handleItemClick}
+            onClick={handleHomeClick}
           ><Icon name="target"/></Menu.Item>
         </Menu.Menu>  
         <Menu.Menu position='right'>
@@ -38,7 +41,7 @@ const NavBar = props => {
                   <Dropdown.Item>Manager</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown.Item> */}
-              <Dropdown.Item>My Account</Dropdown.Item>
+              <Dropdown.Item onClick={handleAcctClick}>Settings</Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item
               onClick={handleLogout}>Logout</Dropdown.Item>
@@ -51,6 +54,11 @@ const NavBar = props => {
   );
 };
 
+const mdp = (dispatch) =>{
+  return {
+    setUser: (user) => dispatch(setUser(user, dispatch))
+  }
+}
 
 
-export default connect(undefined, {setUser})(withRouter(NavBar));
+export default connect(undefined, mdp)(withRouter(NavBar));

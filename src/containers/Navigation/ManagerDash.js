@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 
 import { getTopPerformer, isNewClient, getTimes, getFullName, getSessionsSold} from '../../helpers/generalHelpers'
 
+import Loading from '../../components/Loading'
+
 class ManagerDash extends Component {
 
   state = {
@@ -75,7 +77,8 @@ renderStats = (backDate, time) => {
                 </Feed>
                 </Card.Content>
             </Card> 
-        </Grid.Column>  
+        </Grid.Column> 
+        
     )
 }
 
@@ -86,13 +89,12 @@ renderTimes = () => {
    
 
   render(){
-    return (
-      <Grid columns={3}>
-          <Grid.Row>
-            {this.renderTimes()}
-          </Grid.Row>
-      </Grid>
-      
+    return ( 
+        <Grid columns={3}>
+            <Grid.Row>
+                {this.renderTimes()}
+            </Grid.Row>
+        </Grid>
     )
   }
 }
@@ -102,7 +104,8 @@ const msp = (state) => {
     allTrainers: state.user.allTrainers,
     allSessions: state.schedule.allSessions,
     allClients: state.user.allClients,
-    clientPackages: state.app.clientPackages
+    clientPackages: state.app.clientPackages,
+    allLoading: state.app.allLoading
   }
 }
 

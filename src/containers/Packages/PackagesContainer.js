@@ -7,6 +7,7 @@ import { deletePackage, updatePackage, addPackage} from "../../actions/actions"
 import AddEditPackageForm from './AddEditPackageForm';
 import BuySellPackageForm from './BuySellPackageForm';
 
+import Loading from '../../components/Loading'
 
 class PackagesContainer extends Component {
 
@@ -143,7 +144,9 @@ class PackagesContainer extends Component {
   
                 <Divider/>
                 <Grid>
-                    {this.renderLevelPackages()}  
+                    
+                {this.renderLevelPackages()}
+                    
                 </Grid> 
             </div>
         )
@@ -157,7 +160,8 @@ const msp = (state) => {
         user: state.user.user,
         packages: state.app.packages,
         levels: state.app.levels,
-        allClients: state.user.allClients
+        allClients: state.user.allClients,
+        allLoading: state.app.allLoading
     }
 }
 export default connect(msp, {deletePackage, updatePackage, addPackage})(withRouter(PackagesContainer));

@@ -2,9 +2,11 @@ import { API } from '../App'
 
 // SETTERS =======================================
 
-export function setUser(user){
-        return {type: "SET_USER", payload: user }
-    }
+export function setUser(user, dispatch){
+   // dispatch(setUserLoading(false))
+    console.log("action setting user...")
+    return {type: "SET_USER", payload: user }
+}
 
 export function setUsers(dispatch, users, userType){
     return {type: "SET_USERS", payload: {users, userType} }
@@ -30,7 +32,12 @@ export function setActivePage(page){
     return {type: "SET_ACTIVEPAGE", payload: page }
 }
 
+export function setUserLoading(flag){
+    console.log("action setting user loading to", flag)
+    return {type: "SET_USER_LOADING", payload: flag}
+}
 export function setLoading(flag){
+    console.log("action setting all loading to", flag)
     return {type: "SET_LOADING", payload: flag}
 }
 

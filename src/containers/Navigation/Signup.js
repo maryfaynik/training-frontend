@@ -80,7 +80,7 @@ export class Signup extends Component {
   
               //set the user in redux
               this.props.setUser(user);
-              this.props.setLoading(true)
+              // this.props.setLoading(true)
               console.log("fetching all the shitsssss LOGIN")
               //fetch this user's clients, sessions, and trainers
               this.props.initialFetch(user)

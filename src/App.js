@@ -6,7 +6,7 @@ import NavBar from './components/NavBar'
 import Main from './components/Main'
 import Loading from './components/Loading'
 
-import {initialFetch, setUser, setLoading} from './actions/actions'
+import {initialFetch, setUser, setUserLoading} from './actions/actions'
 
 export const API = "http://localhost:3000/api/v1"
 // export const API = "https://training-manager-backend.herokuapp.com/api/v1"
@@ -46,12 +46,13 @@ class App extends Component {
 
         })
     }else{
-      this.props.setLoading(false)
+      this.props.setUserLoading(false)
     }
   
   }
 
-  render(){
+render(){
+    console.log('rendering app and loading is', this.props.userLoading)
     return (
       <div className="app">
         <NavBar/>
@@ -64,9 +65,19 @@ class App extends Component {
 
 const msp = (state) =>{
   return {
+    allLoading: state.app.allLoading,
+    userLoading: state.app.userLoading,
     loading: state.app.loading
   }
 }
 
+const mdp = (dispatch) =>{
+  return {
+    initialFetch: (user) => dispatch(initialFetch(user)),
+    setUser: (user) => dispatch(setUser(user, dispatch)),
+    setUserLoading: (flag) => dispatch(setUserLoading(flag))
+  }
+}
 
-export default connect(msp, {initialFetch, setUser, setLoading})(withRouter(App));
+
+export default connect(msp, mdp)(withRouter(App));

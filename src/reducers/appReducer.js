@@ -5,6 +5,8 @@ const defaultState = {
     levels: [],
     packages: [],
     clientPackages: [],
+    userLoading: true,
+    allLoading: true,
     loading: true
   }
   
@@ -13,8 +15,12 @@ function scheduleReducer(state= defaultState, action) {
     let index
     switch (action.type) {
         case "SET_LOADING":
-            console.log("setting loading to false")
+            console.log("reducer setting all loading to ", action.payload)
             return {...state, loading: action.payload}
+        
+            case "SET_USER_LOADING":
+            console.log("reducer setting user loading to ", action.payload)
+            return {...state, userLoading: action.payload}
 
         case "SET_ACTIVEPAGE":
             return {...state, activePage: action.payload}

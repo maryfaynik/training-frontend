@@ -6,6 +6,7 @@ import {Button, Card, Menu, Input} from 'semantic-ui-react';
 import {getFullName, getAge, getLevelOptions} from '../../helpers/generalHelpers'
 import { deleteUser} from '../../actions/actions'
 import UserForm from './UserForm.js'
+import Loading from '../../components/Loading'
 import {API} from '../../App'
 
 const defaultUser = {
@@ -182,10 +183,12 @@ class UsersContainer extends Component {
                         onChange={this.handleSearchChange} />
                 </Menu.Item>
                 <p></p>
+                
                 <Card.Group>
                     {this.renderUsers()}
                 </Card.Group>
-                
+            
+            
             </div>
         )
         
@@ -199,6 +202,7 @@ const msp = (state) => {
         allTrainers: state.user.allTrainers,
         allClients: state.user.allClients,
         levels: state.app.levels,
+        allLoading: state.app.allLoading
     }
 }
 export default connect(msp, {deleteUser})(withRouter(UsersContainer));

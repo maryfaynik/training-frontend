@@ -3,12 +3,13 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar'
-import { Dropdown, Icon, Menu} from 'semantic-ui-react'
+import { Dropdown, Icon, Menu, Grid} from 'semantic-ui-react'
 
 import {getTrainerOptions, getClientOptions, getEvents, getResources} from '../../helpers/scheduleHelpers'
 import {getDayString, getTimeString, findClientByName} from '../../helpers/generalHelpers'
 
 import SessionForm from './SessionForm';
+import Loading from '../../components/Loading'
 
 const localizer = momentLocalizer(moment)
 const defaultSession = {
@@ -164,19 +165,6 @@ class ScheduleContainer extends Component {
                     <Menu id="schedule-menu" secondary>
                         <Menu.Item size="small" onClick={this.toggleForm}><Icon name = "plus"/> Add Session</Menu.Item>
                         { this.state.userType === "Manager" ? 
-                            // <Menu secondary>
-                            //     <Menu.Item
-                            //     name='Filter By Trainer'
-                            //     active={false}
-                            //     />
-                            //     <Menu.Item>
-                            //     <Dropdown
-                            //         placeholder = "Select a Trainer"
-                            //         selection
-                            //         onChange={this.handleTrainerSelect}
-                            //         options={[ {key: "all", text: "Show All", value: "all"}, ...getTrainerOptions(allTrainers)]}/>
-                            //     </Menu.Item>
-
                             <Menu.Menu position="right">
                             <Menu.Item>
                                 <Dropdown
@@ -189,7 +177,7 @@ class ScheduleContainer extends Component {
                             </Menu.Menu>
                         : null }
                     </Menu> 
-
+                  
                     <Calendar className="calendar"
                         localizer= {localizer}
                         views ={views}
@@ -212,6 +200,7 @@ class ScheduleContainer extends Component {
                         // }}
                     />
                     
+                    
                 </div>
             )
         }
@@ -224,7 +213,8 @@ const msp = (state) => {
         user: state.user.user,
         allSessions: state.schedule.allSessions,
         allClients: state.user.allClients,
-        allTrainers: state.user.allTrainers
+        allTrainers: state.user.allTrainers,
+        allLoading: state.app.allLoading
     }
 }
 export default connect(msp)(withRouter(ScheduleContainer));
