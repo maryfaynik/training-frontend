@@ -59,7 +59,7 @@ class SessionForm extends Component {
             this.setState({
                 errors: ["Must select client and trainer!"]
             })
-        }else if (!this.state.client_package_id){
+        }else if (isNew && !this.state.client_package_id){
             this.setState({
                 errors: ["Must select package to deduct"]
             })
@@ -68,11 +68,11 @@ class SessionForm extends Component {
             let client = this.props.allClients.find(client => client.id === this.state.client_id)
             let trainer = this.props.allTrainers.find(trainer => trainer.id === this.state.trainer_id)
            
-            if(!isAvailable(client, this.props.allSessions, newSession.session.daytime, newSession.session.length)){
+            if(!isAvailable(client, this.props.allSessions, newSession.session.daytime, newSession.session.length, this.state.id)){
                 this.setState({
                     errors: ["The client already has a session at this time. Try another time"]
                 })
-            }else if(!isAvailable(trainer, this.props.allSessions, newSession.session.daytime, newSession.session.length)){
+            }else if(!isAvailable(trainer, this.props.allSessions, newSession.session.daytime, newSession.session.length, this.state.id)){
                 this.setState({
                     errors: ["The trainer has another session at this time. Try another time or trainer"]
                 })
@@ -102,35 +102,36 @@ class SessionForm extends Component {
                             // Add / Update the session in redux
                             if(isNew){
                                 this.props.addSession(data.session)
+                                // Update the number of sessions left on client's package
+                                let cp = this.props.clientPackages.find(cp => cp.id === this.state.client_package_id)
+                                let obj = {
+                                    session_count: cp.session_count - 1
+                                }
+                                
+                                fetch(`${API}/client_packages/${this.state.client_package_id}`, {
+                                    method: "PATCH",
+                                    headers: {
+                                        "content-type": "application/json",
+                                        "accepts": "application/json"
+                                    },
+                                    body: JSON.stringify(obj)
+                    
+                                }).then (resp => resp.json())
+                                    .then(data => {
+                                        if(data.errors){
+                                            this.setState({
+                                                errors: data.errors,
+                                            })
+                                        }else{
+                                            this.props.toggleForm()
+                                            this.props.decreaseSessionCount(this.state.client_package_id)
+                                        }
+                                    })
                             }else{
                                 this.props.updateSession(data.session)
+                                this.props.toggleForm()
                             }
 
-                            // Update the number of sessions left on client's package
-                            let cp = this.props.clientPackages.find(cp => cp.id === this.state.client_package_id)
-                            let obj = {
-                                session_count: cp.session_count - 1
-                            }
-                            
-                            fetch(`${API}/client_packages/${this.state.client_package_id}`, {
-                                method: "PATCH",
-                                headers: {
-                                    "content-type": "application/json",
-                                    "accepts": "application/json"
-                                },
-                                body: JSON.stringify(obj)
-                
-                            }).then (resp => resp.json())
-                                .then(data => {
-                                    if(data.errors){
-                                        this.setState({
-                                            errors: data.errors,
-                                        })
-                                    }else{
-                                        this.props.toggleForm()
-                                        this.props.decreaseSessionCount(this.state.client_package_id)
-                                    }
-                                })
                         }
                     })
             } 
@@ -212,7 +213,7 @@ class SessionForm extends Component {
     }
 
     render(){
-
+        console.log("state =", this.state)
         let {isNew} = this.props
         return (
             this.state.showPackForm ? this.renderPackageForm()
@@ -263,7 +264,7 @@ class SessionForm extends Component {
                         
                         <Form.Group inline>
                             <Label horizontal>Date</Label>
-                            <Form.Input onChange={this.handleChange} value={this.state.date} name="date" type="date"/>
+                            <Form.Input onChange={this.handleChange} value={new Date(this.state.date).toISOString().split("T")[0]} name="date" type="date"/>
                 
                             <Label>Time</Label>
                             <Form.Input onChange={this.handleChange} value={this.state.time} name="time" type="time"/>

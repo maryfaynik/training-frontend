@@ -82,13 +82,13 @@ export const overlap = (start1, len1, start2, len2) => {
     return (start1 >= start2 && start1 < end2) || (end1 > start2 && end1 <= end2)
 }
 
-export const isAvailable = (user, sessions, daytime, length) => {
+export const isAvailable = (user, sessions, daytime, length, thisSession) => {
 
     let potentialConflicts = sessions.filter(ses => {
         return ((ses.client_id === user.id || ses.trainer_id === user.id) && ses.status !== "cancelled") 
     })
  
-    let conflict = potentialConflicts.find(ses => overlap(ses.daytime, ses.length, daytime, length) )
+    let conflict = potentialConflicts.find(ses => ses.id !== thisSession && overlap(ses.daytime, ses.length, daytime, length) )
 
     return (conflict === undefined)
 }

@@ -145,7 +145,7 @@ class UsersContainer extends Component {
                                 <Card.Meta>{user.gender}, {getAge(user)} years</Card.Meta>
                             }
                             <Card.Description>
-                                This will be bio!
+                                
                             </Card.Description>
                         </Card.Content>
                         
