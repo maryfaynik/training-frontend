@@ -2,15 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
-import NavBar from './components/Navigation/NavBar'
-import Main from './components/Navigation/Main'
-import Loading from './components/Navigation/Loading'
+import NavBar from './components/NavBar'
+import Main from './components/Main'
+import Loading from './components/Loading'
 
 import {initialFetch, setUser, setLoading} from './actions/actions'
 
-// export const API = "http://localhost:3000/api/v1"
+export const API = "http://localhost:3000/api/v1"
 // export const API = "https://training-manager-backend.herokuapp.com/api/v1"
-export const API = "ws://training-manager-backend.herokuapp.com/api/v1"
 
 class App extends Component {
 

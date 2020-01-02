@@ -5,7 +5,7 @@ import {Button, Grid, Image, Header, Segment, Label, List} from 'semantic-ui-rea
 
 import {getFullName, getAge, getUserFromId} from '../../helpers/generalHelpers'
 
-import {API} from '../../App'
+// import {API} from '../../App' 
 
 class UserProfile extends Component {
 
@@ -75,7 +75,6 @@ class UserProfile extends Component {
     }
 
     showEdit = (e) => {
-        let {user} = this.props
         this.props.history.push(`/${this.state.path}/edit/${e.target.value}`)
     }
  

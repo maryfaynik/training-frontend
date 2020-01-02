@@ -5,8 +5,8 @@ const defaultState = {
 function scheduleReducer(state= defaultState, action) {
     switch (action.type) {
       case "SET_SESSIONS":
-        console.log("setting sessions to ", action.payload)
         return {...state, allSessions: action.payload}
+        
       case "ADD_SESSION":
         return {...state, allSessions: [...state.allSessions, action.payload]}
       

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar'
-import { Dropdown, Icon, Button, Menu, Input, Label} from 'semantic-ui-react'
+import { Dropdown, Icon, Menu} from 'semantic-ui-react'
 
 import {getTrainerOptions, getClientOptions, getEvents, getResources} from '../../helpers/scheduleHelpers'
 import {getDayString, getTimeString, findClientByName} from '../../helpers/generalHelpers'

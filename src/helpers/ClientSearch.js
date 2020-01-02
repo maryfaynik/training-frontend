@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { Search} from 'semantic-ui-react';
 import _ from 'lodash'
 
-import { getFullName } from "../../helpers/generalHelpers"
+import { getFullName } from "./generalHelpers"
 
 
 class ClientSearch extends Component {

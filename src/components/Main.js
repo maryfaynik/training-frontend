@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux'
 
 import SideBar from './SideBar'
-import MainBody from '../../containers/Navigation/MainBody'
+import MainBody from './MainBody'
 
 const Main = (props) => {
 

@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import { Card, Feed, Statistic, Button, Grid } from 'semantic-ui-react';
+import React, { Component } from 'react';
+import { Card, Feed, Statistic, Divider, Grid } from 'semantic-ui-react';
 import { connect } from 'react-redux'
 
 import { getTopPerformer, isNewClient, getTimes, getFullName, getSessionsSold} from '../../helpers/generalHelpers'
@@ -52,22 +52,22 @@ renderStats = (backDate, time) => {
                         </Feed.Summary>
                         </Feed.Content>
                     </Feed.Event>
-
+                    <Divider/>
                     <Feed.Event>
                     <Feed.Content>
                         <Feed.Summary>
-                            <Feed.User>Top Trainer</Feed.User>: {`${getFullName(stats.topTrainer.user)}, with ${stats.topTrainer.sessions} sessions`}
+                            <b>Top Trainer</b>: <a href={`/profile/${stats.topTrainer.user.id}`}>{getFullName(stats.topTrainer.user)}</a>
                         </Feed.Summary>
-                        <Feed.Extra><Button size="tiny">View Profile</Button></Feed.Extra>
+                        <Feed.Extra>{stats.topTrainer.sessions} sessions</Feed.Extra>
                     </Feed.Content>
                     </Feed.Event>
-    
+                    <Divider/>
                     <Feed.Event>
                     <Feed.Content>
                     <Feed.Summary>
-                            <Feed.User>Top Client</Feed.User>: {`${getFullName(stats.topClient.user)}, with ${stats.topClient.sessions} sessions`}
+                            <b>Top Client</b>: <a href={`/profile/${stats.topClient.user.id}`}>{getFullName(stats.topClient.user)}</a>
                         </Feed.Summary>
-                        <Feed.Extra><Button size="tiny">View Profile</Button></Feed.Extra>
+                        <Feed.Extra>{stats.topClient.sessions} sessions</Feed.Extra>
                     </Feed.Content>
                     </Feed.Event>
 

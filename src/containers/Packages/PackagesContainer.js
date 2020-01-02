@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import {Grid, Header, Button, Divider, Icon, Segment, Menu} from 'semantic-ui-react';
+import {Grid, Header, Button, Divider, Icon, Menu} from 'semantic-ui-react';
 
 import { deletePackage, updatePackage, addPackage} from "../../actions/actions"
 import AddEditPackageForm from './AddEditPackageForm';

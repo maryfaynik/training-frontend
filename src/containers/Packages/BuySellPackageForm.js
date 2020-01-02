@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 import { Form, Button, Header, Label, Segment} from 'semantic-ui-react';
 
 import {sellPackage} from '../../actions/actions'
-import ClientSearch from '../Scheudle/ClientSearch'
+import ClientSearch from '../../helpers/ClientSearch'
 import {getPackageOptions} from '../../helpers/generalHelpers'
 
 import {API} from '../../App'

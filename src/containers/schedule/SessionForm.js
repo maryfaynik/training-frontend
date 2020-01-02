@@ -1,13 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Form, Button, Radio, Segment, Label, Header, Divider} from 'semantic-ui-react';
+import { Form, Button, Radio, Segment, Label, Header} from 'semantic-ui-react';
 
-import ClientSearch from './ClientSearch'
+import ClientSearch from '../../helpers/ClientSearch'
 import { isAvailable, getClientPackageOptions, getFullName, capitalize} from "../../helpers/generalHelpers"
 import {addSession, updateSession, cancelSession, decreaseSessionCount} from '../../actions/actions'
 import {API} from '../../App'
-import BuySellPackageForm from '../Packages/BuySellPackageForm';
+import BuySellPackageForm from '../packages/BuySellPackageForm';
 
 class SessionForm extends Component {
 

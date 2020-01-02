@@ -40,20 +40,19 @@ export function initialFetch(user) {
     return function(dispatch){
         switch(user.type){
             case "Trainer": //get this trianers clients and sessions, set trainers to this user
-              getClients(dispatch, user.id)
-              getSessions(dispatch, user.id)
+              getClients(dispatch, user.id, user)
+              getRecentSessions(dispatch, user.id)
               setUsers(dispatch, [user], "Trainer")
               break
             case "Client": // get this client's session and trainers, set clients to this user
-              getTrainers(dispatch, user.id)
-              getSessions(dispatch, user.id)
+              getTrainers(dispatch, user.id, user)
+              getRecentSessions(dispatch, user.id)
               setUsers(dispatch, [user], "Client")
               break
             default: // Get all of everything...for manager
-                console.log("hereerererr")
-              getClients(dispatch)
-              getSessions(dispatch)
+              getClients(dispatch, null, user)
               getTrainers(dispatch)
+              getRecentSessions(dispatch)
               break
           }
 
@@ -63,6 +62,12 @@ export function initialFetch(user) {
           getPackages(dispatch)
           // get all client-packages
           getClientPackages(dispatch)
+
+
+          //now go back and get alll the sessions
+          // Loading will likely be set to false much sooner
+          // after the clients are fetched
+          
 
 
           
@@ -93,31 +98,66 @@ export function getPackages(dispatch){
     })
 }
 
+export function getRecentSessions(dispatch, id = null){
+    let url = id ? `${API}/recentusersessions/${id}` : `${API}/recentsessions`
+        fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            console.log("setting recent sessions to", data.sessions)
+            dispatch(setSessions(data.sessions))
+        })
+}
 export function getSessions(dispatch, id = null){
     let url = id ? `${API}/usersessions/${id}` : `${API}/sessions`
         fetch(url)
         .then(res => res.json())
         .then(data => {
+            console.log("setting ALLLLL sessions to", data.sessions)
             dispatch(setSessions(data.sessions))
         })
 }
 
-export function getClients(dispatch, id = null){
+export function getClients(dispatch, id = null, user){
     let url = id ? `${API}/userclients/${id}` : `${API}/clients`
         fetch(url)
         .then(res => res.json())
         .then(data => {
             dispatch(setUsers(dispatch, data.users, "Client"))
             dispatch(setLoading(false))
+            switch(user.type){
+                case "Trainer": 
+                  getSessions(dispatch, user.id)
+                  break
+                case "Client": 
+                  getSessions(dispatch, user.id)
+                  break
+                default:
+                  getSessions(dispatch)
+                  break
+            }
         })
 }
 
-export function getTrainers(dispatch, id = null){
+export function getTrainers(dispatch, id = null, user){
     let url = id ? `${API}/usertrainers/${id}` : `${API}/trainers`
         fetch(url)
         .then(res => res.json())
         .then(data => {
             dispatch(setUsers(dispatch, data.users, "Trainer"))
+            if(id){ 
+                dispatch(setLoading(false))
+                switch(user.type){
+                    case "Trainer": 
+                      getSessions(dispatch, user.id)
+                      break
+                    case "Client": 
+                      getSessions(dispatch, user.id)
+                      break
+                    default:
+                      getSessions(dispatch)
+                      break
+                }
+            } 
         })
 }
 
@@ -132,7 +172,6 @@ export function updateUser(user, userType){
 export function deleteUser(id, userType){
     return {type: "DELETE_USER", payload: {id, userType}}
 }
-
 
 export function addSession(session){
     return {type: "ADD_SESSION", payload: session}

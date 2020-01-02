@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { withRouter, Link } from 'react-router-dom'
-import { Form, Button, Grid, Radio, Segment, Menu, Label} from 'semantic-ui-react';
+import { Form, Button, Radio, Segment, Menu, Label} from 'semantic-ui-react';
 import { API } from '../../App';
 
 import {setUser, updateUser} from '../../actions/actions'
@@ -30,7 +30,7 @@ export class Signup extends Component {
   //Upon Login submit, check user auth
   handleSubmit = event => {
     event.preventDefault();
-    const { email, password, password_confirm, type } = this.state;
+    const { email, password, password_confirm } = this.state;
 
     if(password !== password_confirm){
       this.setState({

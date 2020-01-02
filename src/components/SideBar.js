@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Menu} from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 
-import { setActivePage } from '../../actions/actions'
+import { setActivePage } from '../actions/actions'
 
 const SideBar = (props) => {
   
@@ -91,6 +91,15 @@ const SideBar = (props) => {
                 active={props.activeItem === 'packages'}
                 >
                 {info.packages.name}
+                </Menu.Item>
+
+                <Menu.Item
+                value="settings"
+                as={Link} to={`/settings`}
+                onClick = {handleClick}
+                active={props.activeItem === 'settings'}
+                >
+                Settings
                 </Menu.Item>
             
             </Menu>

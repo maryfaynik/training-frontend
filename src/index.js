@@ -1,4 +1,5 @@
 import * as serviceWorker from './serviceWorker'
+import ActionCableProvider from 'react-actioncable-provider'
 
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import React from 'react'
@@ -16,6 +17,8 @@ import App from './App'
 
 import rootReducer from './reducers/rootReducer'
 
+const API_WS_ROOT = "ws://training-manager-backend.herokuapp.com/api/v1"
+
 const store = createStore(
     rootReducer, 
     compose(
@@ -25,11 +28,13 @@ const store = createStore(
 )
 
 ReactDOM.render(
-    <Provider store={store}>
-        <Router>
-            <App />
-        </Router>
-    </Provider>
+    <ActionCableProvider url={API_WS_ROOT}>
+        <Provider store={store}>
+            <Router>
+                <App />
+            </Router>
+        </Provider>
+    </ActionCableProvider>
     , document.getElementById('root'));
 
 
