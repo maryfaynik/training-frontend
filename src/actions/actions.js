@@ -3,8 +3,6 @@ import { API } from '../App'
 // SETTERS =======================================
 
 export function setUser(user, dispatch){
-   // dispatch(setUserLoading(false))
-    console.log("action setting user...")
     return {type: "SET_USER", payload: user }
 }
 
@@ -33,13 +31,14 @@ export function setActivePage(page){
 }
 
 export function setUserLoading(flag){
-    console.log("action setting user loading to", flag)
     return {type: "SET_USER_LOADING", payload: flag}
 }
-export function setLoading(flag){
-    console.log("action setting all loading to", flag)
-    return {type: "SET_LOADING", payload: flag}
+
+export function setAllLoading(flag){
+
+    return {type: "SET_ALL_LOADING", payload: flag}
 }
+
 
 // GETTERS ==================================
 
@@ -75,9 +74,6 @@ export function initialFetch(user) {
           // Loading will likely be set to false much sooner
           // after the clients are fetched
           
-
-
-          
     }
 }
 
@@ -110,7 +106,7 @@ export function getRecentSessions(dispatch, id = null){
         fetch(url)
         .then(res => res.json())
         .then(data => {
-            console.log("setting recent sessions to", data.sessions)
+
             dispatch(setSessions(data.sessions))
         })
 }
@@ -119,7 +115,7 @@ export function getSessions(dispatch, id = null){
         fetch(url)
         .then(res => res.json())
         .then(data => {
-            console.log("setting ALLLLL sessions to", data.sessions)
+
             dispatch(setSessions(data.sessions))
         })
 }
@@ -130,7 +126,7 @@ export function getClients(dispatch, id = null, user){
         .then(res => res.json())
         .then(data => {
             dispatch(setUsers(dispatch, data.users, "Client"))
-            dispatch(setLoading(false))
+            dispatch(setAllLoading(false))
             switch(user.type){
                 case "Trainer": 
                   getSessions(dispatch, user.id)
@@ -152,7 +148,7 @@ export function getTrainers(dispatch, id = null, user){
         .then(data => {
             dispatch(setUsers(dispatch, data.users, "Trainer"))
             if(id){ 
-                dispatch(setLoading(false))
+                dispatch(setAllLoading(false))
                 switch(user.type){
                     case "Trainer": 
                       getSessions(dispatch, user.id)

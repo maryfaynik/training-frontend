@@ -63,7 +63,6 @@ class UsersContainer extends Component {
 
     goBack = () => {
         if(this.props.back){
-            console.log("this.props.history =", this.props.history)
             this.props.history.goBack()
         }else{
             this.setState({
@@ -171,8 +170,7 @@ class UsersContainer extends Component {
 
     // RENDER --------------------------------
     render(){
-        console.log("rendering users container, props=", this.props)
-        console.log("state =", this.state)
+
         return (
             
             <div className="train-container">
@@ -183,10 +181,13 @@ class UsersContainer extends Component {
                         onChange={this.handleSearchChange} />
                 </Menu.Item>
                 <p></p>
-                
+                {this.props.allLoading ? 
+                <Loading/> 
+                : 
                 <Card.Group>
                     {this.renderUsers()}
                 </Card.Group>
+                }
             
             
             </div>

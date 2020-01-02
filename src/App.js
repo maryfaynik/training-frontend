@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom'
 
 import NavBar from './components/NavBar'
 import Main from './components/Main'
-import Loading from './components/Loading'
 
 import {initialFetch, setUser, setUserLoading} from './actions/actions'
 
@@ -37,7 +36,8 @@ class App extends Component {
           }else{
 
             this.props.setUser(data.data);
-            
+            this.props.setUserLoading(false)
+
             //fetch this user's clients, sessions, and trainers
             let user=data.data
             console.log("fetching all the shitsssss autologin")
@@ -52,11 +52,11 @@ class App extends Component {
   }
 
 render(){
-    console.log('rendering app and loading is', this.props.userLoading)
+
     return (
       <div className="app">
         <NavBar/>
-        {this.props.loading ? <Loading /> : <Main/>}
+       <Main/>
       </div>
     )
   }
@@ -65,6 +65,7 @@ render(){
 
 const msp = (state) =>{
   return {
+    user: state.user.user,
     allLoading: state.app.allLoading,
     userLoading: state.app.userLoading,
     loading: state.app.loading

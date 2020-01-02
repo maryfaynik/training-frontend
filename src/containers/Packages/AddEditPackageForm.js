@@ -23,7 +23,6 @@ class AddEditPackageForm extends Component {
     componentDidMount(){
         if(!this.props.isNew){
             let pack = this.props.editPack
-            console.log("edit pack = ", pack)
              this.setState({
                  id: pack.id,
                  title: pack.title,
@@ -47,7 +46,6 @@ class AddEditPackageForm extends Component {
     }
 
     handleSubmit = (e) =>{
-        console.log("submitting package")
         e.preventDefault()
     
         const {isNew} = this.props
@@ -63,8 +61,6 @@ class AddEditPackageForm extends Component {
                 session_count: this.state.session_count,
             }
         }
-
-        console.log("newPackage ", newPackage)
         
         if(false){
             this.setState({
@@ -92,10 +88,9 @@ class AddEditPackageForm extends Component {
                         })
                     }else{
                         if(isNew){
-                            console.log("adding package:", data.package)
                             this.props.addPackage(data.package)
                         }else{
-                            console.log("calling update package...", data.package)
+
                             this.props.updatePackage(data.package)
                         }
                         this.props.toggleForm()
@@ -133,7 +128,7 @@ class AddEditPackageForm extends Component {
     }
 
     render(){
-        console.log('rendering add/edit package form...state = ', this.state)
+        
        
         return (
             <div className= 'outer-popup'>

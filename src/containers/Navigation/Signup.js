@@ -62,7 +62,6 @@ export class Signup extends Component {
           })
           .then(resp => resp.json())
           .then(data => {
-            console.log("got back ", data)
 
             if(data.errors){
               this.props.setUser({});
@@ -75,7 +74,6 @@ export class Signup extends Component {
 
             }else{
               //cache the user info
-              console.log("setting localstorage id to ", user.id)
               localStorage.user_id = user.id;
   
               //set the user in redux

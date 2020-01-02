@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component} from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import moment from 'moment'
@@ -86,8 +86,7 @@ class ScheduleContainer extends Component {
 
     // Calendar handlers ---------------------------------
     handleSlotSelect = (e) => {
-        console.log("clicked on this slot...")
-        console.dir(e)
+
         let newSession = {
             date: getDayString(e.start),
             time: getTimeString(e.start),
@@ -97,7 +96,6 @@ class ScheduleContainer extends Component {
             client_id: undefined,
         }
         
-        console.log('clicked slot, setting editSession to: ', newSession)
         this.setState({
             editSession: {...newSession},
             showForm: true,
@@ -109,7 +107,7 @@ class ScheduleContainer extends Component {
     }
     
     handleEventSelect = (e) => {
-        console.dir(e)
+
         let client = findClientByName(e.title, this.props.allClients)
         let session = this.props.allSessions.find(s => s.id === e.id)
 
@@ -151,59 +149,58 @@ class ScheduleContainer extends Component {
     // RENDERS ---------------------------------
     render(){
     
-        const {user, allTrainers, allClients, allSessions} = this.props
+        const { allTrainers, allClients, allSessions} = this.props
         const {trainer, views } = this.state
 
-        if(!user.id){
-            this.props.history.push('/login')
-            return null
-        }else{
-            return (
-                <div className="sched-container">
-                    {this.state.showForm ? <SessionForm editSession={this.state.editSession} trainerOptions={getTrainerOptions(allTrainers)} clientOptions={getClientOptions(allClients)} goBack={this.goBack} toggleForm={this.toggleForm} isNew={this.state.enterNew}/> : null}
-                    
-                    <Menu id="schedule-menu" secondary>
-                        <Menu.Item size="small" onClick={this.toggleForm}><Icon name = "plus"/> Add Session</Menu.Item>
-                        { this.state.userType === "Manager" ? 
-                            <Menu.Menu position="right">
-                            <Menu.Item>
-                                <Dropdown
-                                    text="Filter By Trainer"
-                                    icon="filter"
-                                    selection
-                                    onChange={this.handleTrainerSelect}
-                                    options={[ {key: "all", text: "Show All", value: "all"}, ...getTrainerOptions(allTrainers)]}/>
-                            </Menu.Item>
-                            </Menu.Menu>
-                        : null }
-                    </Menu> 
-                  
-                    <Calendar className="calendar"
-                        localizer= {localizer}
-                        views ={views}
-                        // popup= {true}
-                        selectable
-                        onSelectEvent = {this.handleEventSelect}
-                        onSelectSlot = {this.handleSlotSelect}
-                        defaultView= {Views.DAY}
-                        step= {15}
-                        scrollToTime= {new Date(moment())}
-                        min= {new Date(2017, 1, 1, 5, 0, 0)}
-                        max= {new Date(2050, 1, 1, 22, 0, 0)}
-                        events= {getEvents(allSessions, allClients, trainer)}
-                        resources= {getResources(allTrainers, trainer)}
-                        startAccessor="start"
-                        endAccessor="end"
-                        // eventPropGetter= {customEventPropGetter}
-                        // components ={{
-                        //     event: Event
-                        // }}
-                    />
-                    
-                    
-                </div>
-            )
-        }
+       
+        return (
+            <div className="sched-container">
+                {this.state.showForm ? <SessionForm editSession={this.state.editSession} trainerOptions={getTrainerOptions(allTrainers)} clientOptions={getClientOptions(allClients)} goBack={this.goBack} toggleForm={this.toggleForm} isNew={this.state.enterNew}/> 
+                : null}
+                <Menu id="schedule-menu" secondary>
+                    <Menu.Item size="small" onClick={this.toggleForm}><Icon name = "plus"/> Add Session</Menu.Item>
+                    { this.state.userType === "Manager" ? 
+                        <Menu.Menu position="right">
+                        <Menu.Item>
+                            <Dropdown
+                                text="Filter By Trainer"
+                                icon="filter"
+                                selection
+                                onChange={this.handleTrainerSelect}
+                                options={this.props.allLoading? [] : [ {key: "all", text: "Show All", value: "all"}, ...getTrainerOptions(allTrainers)]}/>
+                        </Menu.Item>
+                        </Menu.Menu>
+                    : null }
+                </Menu> 
+                {this.props.allLoading ? 
+                <Grid><Grid.Row><Grid.Column><Loading/></Grid.Column></Grid.Row></Grid>
+                : 
+                <Calendar className="calendar"
+                    localizer= {localizer}
+                    views ={views}
+                    // popup= {true}
+                    selectable
+                    onSelectEvent = {this.handleEventSelect}
+                    onSelectSlot = {this.handleSlotSelect}
+                    defaultView= {Views.DAY}
+                    step= {15}
+                    scrollToTime= {new Date(moment())}
+                    min= {new Date(2017, 1, 1, 5, 0, 0)}
+                    max= {new Date(2050, 1, 1, 22, 0, 0)}
+                    events= {getEvents(allSessions, allClients, trainer)}
+                    resources= {getResources(allTrainers, trainer)}
+                    startAccessor="start"
+                    endAccessor="end"
+                    // eventPropGetter= {customEventPropGetter}
+                    // components ={{
+                    //     event: Event
+                    // }}
+                />
+                }
+
+            </div>
+        )
+        
     }
     
 }

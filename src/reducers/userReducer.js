@@ -11,13 +11,11 @@ function userReducer(state = defaultState, action) {
     switch (action.type) {
       
       case "SET_USER":
-        console.log("setting user in reducer")
         return {...state, user: action.payload}
 
       case "SET_USERS":
         
         key = `all${action.payload.userType}s`
-        console.log("setting ", key, " to ", action.payload.users)
         return {...state, [key]: action.payload.users} 
 
       case "ADD_USER":
