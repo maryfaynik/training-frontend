@@ -201,7 +201,7 @@ class ScheduleContainer extends Component {
                         step= {15}
                         scrollToTime= {new Date(moment())}
                         min= {new Date(2017, 1, 1, 5, 0, 0)}
-                        max= {new Date(2050cd, 1, 1, 22, 0, 0)}
+                        max= {new Date(2050, 1, 1, 22, 0, 0)}
                         events= {getEvents(allSessions, allClients, trainer)}
                         resources= {getResources(allTrainers, trainer)}
                         startAccessor="start"
