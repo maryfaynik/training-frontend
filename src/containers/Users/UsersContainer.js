@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import {Button, Card, Menu, Input, IconGroup} from 'semantic-ui-react';
+import {Button, Card, Menu, Input} from 'semantic-ui-react';
 
 import {getFullName, getAge, getLevelOptions} from '../../helpers/generalHelpers'
 import { deleteUser} from '../../actions/actions'
@@ -22,9 +22,9 @@ const defaultUser = {
 class UsersContainer extends Component {
 
     state = {
-        showForm: false,
-        enterNew: true,
-        editUser: defaultUser,
+        showForm: this.props.showForm,
+        enterNew: this.props.enterNew,
+        editUser: this.props.editUser ? this.props.editUser : defaultUser,
         errors: [],
         path: this.props.userType.toLowerCase() + "s",
         searchName: ""
@@ -48,6 +48,7 @@ class UsersContainer extends Component {
                         errors: data.errors.errors,
                     });
                 }else{
+                    this.goBack(true)
                     this.props.deleteUser(id, `${this.props.userType}`)
                 }
             })
@@ -55,13 +56,23 @@ class UsersContainer extends Component {
 
     //Form Actions -------------------
 
+    viewProfile = (e) => {
+        this.props.history.push(`/profile/${e.target.value}`)
+    }
+
     goBack = () => {
-        this.setState({
-            showForm: false,
-            enterNew: true,
-            editUser: defaultUser,
-            errors: []
-        })
+        if(this.props.back){
+            console.log("this.props.history =", this.props.history)
+            this.props.history.goBack()
+        }else{
+            this.setState({
+                showForm: false,
+                enterNew: true,
+                editUser: defaultUser,
+                errors: []
+            })
+
+        }
     }
 
     toggleForm = (e) => {
@@ -92,7 +103,7 @@ class UsersContainer extends Component {
         if(this.state.enterNew){
             return <UserForm isNew={true} editUser={this.state.editUser} toggleForm={this.toggleForm} levelOptions={getLevelOptions(this.props.levels)} goBack={this.goBack} userType={this.props.userType}/>
         }else{
-            return <UserForm isNew={false} editUser={this.state.editUser} toggleForm={this.toggleForm} levelOptions={getLevelOptions(this.props.levels)} goBack={this.goBack} userType={this.props.userType}/>
+            return <UserForm deleteUser={this.deleteUser} isNew={false} editUser={this.state.editUser} toggleForm={this.toggleForm} levelOptions={getLevelOptions(this.props.levels)} goBack={this.goBack} userType={this.props.userType}/>
         }
     }
 
@@ -104,6 +115,7 @@ class UsersContainer extends Component {
     }
 
     renderUsers = () => {
+        const currentUser = this.props.user
         const type = this.props.userType
    
         //sort the users alphabetically and filter if needed
@@ -136,14 +148,17 @@ class UsersContainer extends Component {
                                 This will be bio!
                             </Card.Description>
                         </Card.Content>
-                        {type === "Manager" ?
+                        
                             <Card.Content extra>
                                 <div>
-                                <Button value={user.id} onClick={this.toggleForm}>Edit</Button>
-                                <Button value={user.id} onClick={this.deleteUser}>Delete</Button>
+                                {currentUser.type === "Manager" ? 
+                                    <Fragment>
+                                    <Button value={user.id} onClick={this.toggleForm}>Edit</Button> 
+                                    </Fragment>
+                                : null }
+                                <Button value={user.id} onClick={this.viewProfile}>View Profile</Button>
                                 </div>
                             </Card.Content>
-                        : null}
                     </Card>
                 )
             })
@@ -155,7 +170,8 @@ class UsersContainer extends Component {
 
     // RENDER --------------------------------
     render(){
-
+        console.log("rendering users container, props=", this.props)
+        console.log("state =", this.state)
         return (
             
             <div className="train-container">

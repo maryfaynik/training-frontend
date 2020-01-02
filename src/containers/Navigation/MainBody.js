@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Switch, Route, withRouter, Redirect} from 'react-router-dom'
 
+import { getUserFromId} from '../../helpers/generalHelpers'
 import Landing from '../../components/Navigation/Landing'
 import Login from './Login'
 import Signup from './Signup'
 import ScheduleContainer from '../Scheudle/ScheduleContainer'
 import UsersContainer from '../Users/UsersContainer';
+import UserProfile from '../Users/UserProfile';
 import PackagesContainer from '../Packages/PackagesContainer';
 
 class MainBody extends Component {
@@ -24,16 +26,23 @@ class MainBody extends Component {
       return <Signup/>
   }
 
-  renderClients = () => {
+  renderClients = (routerProps) => {
     if(!this.props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
-      // return <ClientsContainer/>
-      return <UsersContainer allUsers={this.props.allClients} userType="Client"/>
+    if(routerProps.match.params.id){
+      let edit = getUserFromId(parseInt(routerProps.match.params.id), this.props.allClients)
+      console.log("edit =", edit)
+      return <UsersContainer back={true} editUser={edit} enterNew={false} showForm={true} allUsers={this.props.allClients} userType="Client"/>
+    }
+    return <UsersContainer back={false} showForm={false} enterNew={true} allUsers={this.props.allClients} userType="Client"/>
   }
 
-  renderTrainers = () => {
+  renderTrainers = (routerProps) => {
     if(!this.props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
-      // return <TrainersContainer/>
-      return <UsersContainer allUsers={this.props.allTrainers} userType="Trainer"/>
+      if(routerProps.match.params.id){
+        let edit = getUserFromId(parseInt(routerProps.match.params.id), this.props.allTrainers)
+        return <UsersContainer back={true} editUser={edit} enterNew={false} showForm={true} allUsers={this.props.allTrainers} userType="Trainer"/>
+      }
+      return <UsersContainer back={false} showForm={false} enterNew={true} allUsers={this.props.allTrainers} userType="Trainer"/>
   }
 
   renderSchedule = () => {
@@ -46,9 +55,14 @@ class MainBody extends Component {
       return <PackagesContainer/>
   }
 
-  renderProfile = () => {
+  renderProfile = (routerProps) => {
     if(!this.props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
-    return <div>PROFILE FOR USER {this.props}</div>
+
+    let id = parseInt(routerProps.match.params.id)
+    let user = getUserFromId(id, [...this.props.allTrainers, ...this.props.allClients])
+    if(user === undefined){
+      this.props.history.goBack()
+    }else return <UserProfile user={user}/>
 }
 
 
@@ -67,6 +81,8 @@ class MainBody extends Component {
                 <Route exact path="/schedule" render={this.renderSchedule} />
                 <Route exact path="/trainers" render={this.renderTrainers} />
                 <Route exact path="/clients" render={this.renderClients} />
+                <Route exact path="/clients/edit/:id" render={this.renderClients} />
+                <Route exact path="/trainers/edit/:id" render={this.renderTrainers} />
                 <Route exact path="/packages" render={this.renderPackages} />
                 <Route exact path="/profile/:id" render={this.renderProfile} />
             </Switch>
@@ -80,7 +96,7 @@ const msp = (state) => {
     return{
         user: state.user.user,
         allTrainers: state.user.allTrainers,
-        allClients: state.user.allClients
+        allClients: state.user.allClients,
     }
 }
 

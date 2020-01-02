@@ -127,6 +127,9 @@ class UserForm extends Component {
                     : null}
     
                 </Form>
+                
+                { !this.props.isNew ? <p><Button size="small" value={this.state.id} onClick={this.props.deleteUser}>Delete User</Button> </p>: null}  
+                
                 <p>
                     <Button primary type="submit" form={"user-form"}>{this.props.isNew ? "Submit" : "Save Changes" }</Button>
                     <Button onClick={this.props.goBack}>Go Back</Button>
