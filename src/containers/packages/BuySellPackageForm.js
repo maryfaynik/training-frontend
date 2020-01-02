@@ -80,7 +80,8 @@ class BuySellPackageForm extends Component {
     }
 
     render(){
-
+        console.log('rendering buy/sell package form...state = ', this.state)
+       
         return (
             <div className= 'outer-popup'>
             <div className="inner-popup">

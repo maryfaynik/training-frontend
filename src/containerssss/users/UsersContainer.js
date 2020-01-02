@@ -5,7 +5,7 @@ import {Button, Card, Menu, Input} from 'semantic-ui-react';
 
 import {getFullName, getAge, getLevelOptions} from '../../helpers/generalHelpers'
 import { deleteUser} from '../../actions/actions'
-import UserForm from './UserForm'
+import UserForm from './UserForm.js.js.js'
 import Loading from '../../components/Loading'
 import {API} from '../../App'
 
