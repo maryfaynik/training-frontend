@@ -16,8 +16,8 @@ import Settings from '../containers/navigation/Settings';
 const MainBody =(props) => {
 
   const renderLanding = () => {
-      if(!props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
-      return <Landing/>
+    if(!props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
+    return <Landing/>
   }
 
   const renderLogin = () => {
@@ -34,7 +34,6 @@ const MainBody =(props) => {
     if(!props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
     if(routerProps.match.params.id){
       let edit = getUserFromId(parseInt(routerProps.match.params.id), props.allClients)
-      console.log("edit =", edit)
       return <UsersContainer back={true} editUser={edit} enterNew={false} showForm={true} allUsers={props.allClients} userType="Client"/>
     }
     return <UsersContainer back={false} showForm={false} enterNew={true} allUsers={props.allClients} userType="Client"/>
@@ -42,7 +41,8 @@ const MainBody =(props) => {
 
   const renderTrainers = (routerProps) => {
     if(!props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
-      if(routerProps.match.params.id){
+
+    if(routerProps.match.params.id){
         let edit = getUserFromId(parseInt(routerProps.match.params.id), props.allTrainers)
         return <UsersContainer back={true} editUser={edit} enterNew={false} showForm={true} allUsers={props.allTrainers} userType="Trainer"/>
       }
@@ -50,12 +50,15 @@ const MainBody =(props) => {
   }
 
   const renderSchedule = () => {
-      if(!props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
-      return <ScheduleContainer/>
+
+    if(!props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
+
+    return <ScheduleContainer/>
   }
 
   const renderPackages = () => {
       if(!props.user.id && !localStorage.user_id) return <Redirect to="/login"/>
+
       return <PackagesContainer/>
   }
 
@@ -106,6 +109,7 @@ const msp = (state) => {
         user: state.user.user,
         allTrainers: state.user.allTrainers,
         allClients: state.user.allClients,
+        allLoading: state.app.allLoading
     }
 }
 

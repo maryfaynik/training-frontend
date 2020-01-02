@@ -4,7 +4,7 @@ import { withRouter, Link } from 'react-router-dom'
 import { Form, Button, Grid, Radio, Segment, Menu } from 'semantic-ui-react';
 import { API } from '../../App';
 
-import {setUser, initialFetch, setAllLoading, setUserLoading} from '../../actions/actions'
+import {setUser, initialFetch, setUserLoading, setAllLoading} from '../../actions/actions'
 
 export class Login extends Component {
 
@@ -55,11 +55,11 @@ export class Login extends Component {
           let user = data.data
 
           //cache the info
-          console.log("setting localstorage id to ", user.id)
           localStorage.user_id = user.id;
 
           //set the user in redux
           this.props.setUser(user);
+          this.props.setUserLoading(false)
           console.log("fetching all the shitsssss LOGIN")
           //fetch this user's clients, sessions, and trainers
           this.props.initialFetch(user)
@@ -67,7 +67,7 @@ export class Login extends Component {
         // If user is not valid / found, set user to null and record errors
         } else {
           this.props.setUser({});
-    
+          this.props.setUserLoading(false)
           localStorage.removeItem("user_id")
           
           this.setState({
@@ -163,7 +163,7 @@ const mdp = (dispatch) =>{
       initialFetch: (user) => dispatch(initialFetch(user)),
       setUser: (user) => dispatch(setUser(user, dispatch)),
       setUserLoading: (flag) => dispatch(setUserLoading(flag)),
-      setAllLoading: (flag) => dispatch(setUserLoading(flag))
+      setAllLoading: (flag) => dispatch(setAllLoading(flag))
     }
 }
 

@@ -39,7 +39,7 @@ class PackagesContainer extends Component {
     // HANDLERS -------------------------------
 
     handleClick = (e, id) => {
-        console.log("clicked...e: ", e.target)
+  
         let name = e.target.name
         let editPack = {}
         if(id !== -1) editPack = this.props.packages.find(pack => pack.id === id)
@@ -144,8 +144,11 @@ class PackagesContainer extends Component {
   
                 <Divider/>
                 <Grid>
-                    
-                {this.renderLevelPackages()}
+                {this.props.allLoading? 
+                  <Grid.Row><Grid.Column><Loading/></Grid.Column></Grid.Row>
+                :  
+                    this.renderLevelPackages()
+                }
                     
                 </Grid> 
             </div>

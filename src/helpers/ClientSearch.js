@@ -15,9 +15,8 @@ class ClientSearch extends Component {
     }
 
     componentDidMount(){
-        console.log("props on client search mount:", this.props)
+
         if(this.props.client_id > 0){
-            console.log("here!!!!!!")
             let client = this.props.clients.find(client => client.id === this.props.client_id)
             this.props.setClient(client.id)
             this.setState({

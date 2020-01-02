@@ -169,3 +169,7 @@ form {
 .settings-segment {
   width: 95%;
 }
+
+.myloader {
+  min-height: 30vh;
+}

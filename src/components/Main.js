@@ -3,13 +3,14 @@ import { connect } from 'react-redux'
 
 import SideBar from './SideBar'
 import MainBody from './MainBody'
+import Loading from './Loading'
 
 const Main = (props) => {
 
     return (
         <div className = "main">
             { props.user.id ? <SideBar/> : null}
-            <MainBody/>
+            { props.userLoading ? <Loading full={true}/> : <MainBody/> }
         </div>
     )
     
@@ -17,7 +18,9 @@ const Main = (props) => {
   
 const msp = (state) => {
     return {
-        user: state.user.user
+        user: state.user.user,
+        allLoading: state.app.allLoading,
+        userLoading: state.app.userLoading
     }
 }
 

@@ -53,7 +53,7 @@ handleResponse = (data) => {
             success: false
         })
     }else{
-        console.log("success, got back: ", data.user)
+
         this.props.updateUser(data.user, this.props.user.type)
         this.setState({
             success: true

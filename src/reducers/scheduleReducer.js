@@ -6,7 +6,7 @@ function scheduleReducer(state= defaultState, action) {
     switch (action.type) {
       case "SET_SESSIONS":
         return {...state, allSessions: action.payload}
-        
+
       case "ADD_SESSION":
         return {...state, allSessions: [...state.allSessions, action.payload]}
       
@@ -14,8 +14,7 @@ function scheduleReducer(state= defaultState, action) {
         let newSessions = [...state.allSessions]
         let index = newSessions.findIndex(ses => ses.id === action.payload.id)
         newSessions[index] = {...action.payload}
-        console.log("updated newSessions = ", newSessions)
-        console.log("updated index item: ", newSessions[index])
+
         return {...state, allSessions: [...newSessions]}
       
       case "DELETE_SESSION":

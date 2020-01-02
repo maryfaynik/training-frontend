@@ -159,7 +159,7 @@ class SessionForm extends Component {
         })
         .then (resp => resp.json())
         .then(data => {
-            console.log("on cancel, got back: ", data)
+   
             if(data.errors){
                 this.setState({
                     errors: data.errors,
@@ -212,7 +212,7 @@ class SessionForm extends Component {
     }
 
     render(){
-        console.log("session form state = ", this.state)
+
         let {isNew} = this.props
         return (
             this.state.showPackForm ? this.renderPackageForm()
