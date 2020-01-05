@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/static/css/main.880985b9.chunk.css",
-    "main.js": "/static/js/main.eeabc882.chunk.js",
-    "main.js.map": "/static/js/main.eeabc882.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.fe79a9da.js",
-    "runtime-main.js.map": "/static/js/runtime-main.fe79a9da.js.map",
-    "static/css/2.25b83785.chunk.css": "/static/css/2.25b83785.chunk.css",
-    "static/js/2.dd08a2df.chunk.js": "/static/js/2.dd08a2df.chunk.js",
-    "static/js/2.dd08a2df.chunk.js.map": "/static/js/2.dd08a2df.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.8e0dff2ff47a24687c646903b40057ee.js": "/precache-manifest.8e0dff2ff47a24687c646903b40057ee.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/2.25b83785.chunk.css.map": "/static/css/2.25b83785.chunk.css.map",
-    "static/css/main.880985b9.chunk.css.map": "/static/css/main.880985b9.chunk.css.map",
-    "static/js/2.dd08a2df.chunk.js.LICENSE": "/static/js/2.dd08a2df.chunk.js.LICENSE"
+    "main.css": "/training-manager-frontend/static/css/main.880985b9.chunk.css",
+    "main.js": "/training-manager-frontend/static/js/main.17794cff.chunk.js",
+    "main.js.map": "/training-manager-frontend/static/js/main.17794cff.chunk.js.map",
+    "runtime-main.js": "/training-manager-frontend/static/js/runtime-main.a1f9d00f.js",
+    "runtime-main.js.map": "/training-manager-frontend/static/js/runtime-main.a1f9d00f.js.map",
+    "static/css/2.25b83785.chunk.css": "/training-manager-frontend/static/css/2.25b83785.chunk.css",
+    "static/js/2.dd08a2df.chunk.js": "/training-manager-frontend/static/js/2.dd08a2df.chunk.js",
+    "static/js/2.dd08a2df.chunk.js.map": "/training-manager-frontend/static/js/2.dd08a2df.chunk.js.map",
+    "index.html": "/training-manager-frontend/index.html",
+    "precache-manifest.d553f7729299865640083e3baf724f38.js": "/training-manager-frontend/precache-manifest.d553f7729299865640083e3baf724f38.js",
+    "service-worker.js": "/training-manager-frontend/service-worker.js",
+    "static/css/2.25b83785.chunk.css.map": "/training-manager-frontend/static/css/2.25b83785.chunk.css.map",
+    "static/css/main.880985b9.chunk.css.map": "/training-manager-frontend/static/css/main.880985b9.chunk.css.map",
+    "static/js/2.dd08a2df.chunk.js.LICENSE": "/training-manager-frontend/static/js/2.dd08a2df.chunk.js.LICENSE"
   },
   "entrypoints": [
-    "static/js/runtime-main.fe79a9da.js",
+    "static/js/runtime-main.a1f9d00f.js",
     "static/css/2.25b83785.chunk.css",
     "static/js/2.dd08a2df.chunk.js",
     "static/css/main.880985b9.chunk.css",
-    "static/js/main.eeabc882.chunk.js"
+    "static/js/main.17794cff.chunk.js"
   ]
 }
