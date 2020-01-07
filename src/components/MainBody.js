@@ -86,18 +86,18 @@ const renderNotFound = () => {
   return (
       <div className="mainBody"> 
           <Switch>
-              <Route exact path="/landing" render={renderLanding} />
-              <Route exact path="/" render={renderLanding} />
-              <Route exact path="/login" render={renderLogin} />
-              <Route exact path="/signup" render={renderSignup} />
-              <Route exact path="/schedule" render={renderSchedule} />
-              <Route exact path="/trainers" render={renderTrainers} />
-              <Route exact path="/clients" render={renderClients} />
-              <Route exact path="/clients/edit/:id" render={renderClients} />
-              <Route exact path="/trainers/edit/:id" render={renderTrainers} />
-              <Route exact path="/packages" render={renderPackages} />
-              <Route exact path="/settings" render={renderSettings} />
-              <Route exact path="/profile/:id" render={renderProfile} />
+              <Route exact path={process.env.PUBLIC_URL + '/landing'} render={renderLanding} />
+              <Route exact path={process.env.PUBLIC_URL + '/'} render={renderLanding} />
+              <Route exact path={process.env.PUBLIC_URL + '/login'} render={renderLogin} />
+              <Route exact path={process.env.PUBLIC_URL + '/signup'} render={renderSignup} />
+              <Route exact path={process.env.PUBLIC_URL + '/schedule'} render={renderSchedule} />
+              <Route exact path={process.env.PUBLIC_URL + '/trainers'} render={renderTrainers} />
+              <Route exact path={process.env.PUBLIC_URL + '/clients'} render={renderClients} />
+              <Route exact path={process.env.PUBLIC_URL + '/clients/edit/:id'} render={renderClients} />
+              <Route exact path={process.env.PUBLIC_URL + '/trainers/edit/:id'} render={renderTrainers} />
+              <Route exact path={process.env.PUBLIC_URL + '/packages'} render={renderPackages} />
+              <Route exact path={process.env.PUBLIC_URL + '/settings'} render={renderSettings} />
+              <Route exact path={process.env.PUBLIC_URL + '/profile/:id'} render={renderProfile} />
               <Route render={renderNotFound}/>
           </Switch>
       </div>

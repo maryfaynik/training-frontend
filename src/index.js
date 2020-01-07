@@ -30,7 +30,7 @@ const store = createStore(
 ReactDOM.render(
     <ActionCableProvider url={API_WS_ROOT}>
         <Provider store={store}>
-            <Router>
+            <Router basename='/'>
                 <App />
             </Router>
         </Provider>

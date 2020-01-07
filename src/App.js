@@ -7,8 +7,8 @@ import Main from './components/Main'
 
 import {initialFetch, setUser, setUserLoading} from './actions/actions'
 
-// export const API = "http://localhost:3000/api/v1"
-export const API = "https://training-manager-backend.herokuapp.com/api/v1"
+export const API = "http://localhost:3000/api/v1"
+// export const API = "https://training-manager-backend.herokuapp.com/api/v1"
 
 class App extends Component {
 
