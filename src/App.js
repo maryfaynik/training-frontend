@@ -40,7 +40,7 @@ class App extends Component {
 
             //fetch this user's clients, sessions, and trainers
             let user=data.data
-            console.log("fetching all the shitsssss autologin")
+            console.log("fetching all the stuff autologin")
             this.props.initialFetch(user)
           }
 

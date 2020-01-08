@@ -39,13 +39,13 @@ class UserProfile extends Component {
                 </Segment>
             </Grid.Column></Grid.Row>
             <Grid.Row><Grid.Column>
-                <Segment>
+                <Segment className="profile-segment">
                     <Label attached="top">Trainers</Label>
                     <List>{this.renderUserList(user.trainers)}</List>
                 </Segment>
                 </Grid.Column></Grid.Row>
             <Grid.Row><Grid.Column>
-                <Segment>
+                <Segment className="profile-segment">
                     <Label attached="top">Packages</Label>
                     <List>{this.renderPackages(user.client_packages)}</List>
                 </Segment>
@@ -63,7 +63,7 @@ class UserProfile extends Component {
                     </Segment>
                 </Grid.Column></Grid.Row>
                 <Grid.Row><Grid.Column>
-                    <Segment>
+                    <Segment className="profile-segment">
                         <Label attached="top">Clients</Label>
                         <List>{this.renderUserList(user.clients)}</List>
                     </Segment>

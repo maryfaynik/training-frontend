@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Form, Button, Radio, Segment, Label, Header} from 'semantic-ui-react';
+import { Form, Button, Radio, Segment, Label, Header, Confirm} from 'semantic-ui-react';
 
 import ClientSearch from '../../helpers/ClientSearch'
 import { isAvailable, getClientPackageOptions, getFullName, capitalize} from "../../helpers/generalHelpers"
@@ -21,7 +21,9 @@ class SessionForm extends Component {
         client_package_id: this.props.editSession.client_package_id,
         status: this.props.editSession.status,
         showPackForm: false,
-        errors: []
+        errors: [],
+        confirmOpen: false,
+        confirmCancel: true
     }
 
 
@@ -138,12 +140,22 @@ class SessionForm extends Component {
         }       
     }
 
+    handleConfirm = () => {
+        this.setState({
+            confirmOpen: false,
+            confirmCancel: true
+        })
+    }
+    handleConfirmCancel = () => {
+        this.setState({
+            confirmOpen: false,
+            confirmCancel: false
+        })
+    }
+
     handleStatus = (e, status) =>{
 
-        if(status === "cancelled"){
-            //eslint-disable-next-line
-            if(window.confirm("Are you sure you want to cancel this session?") === false) return 
-        }
+        if(status === "cancelled" && !this.state.confirmCancel )return 
         
         let obj = {
             status: status
@@ -219,8 +231,14 @@ class SessionForm extends Component {
             this.state.showPackForm ? this.renderPackageForm()
             :
             <div className= 'outer-popup'>
+                <Confirm open={this.state.confirmOpen} onCancel={this.handleConfirmCancel} onConfirm={this.handleConfirm}
+                content='Do you really want to cancel this session?'
+                header='Are you sure?'
+                />
                 <div className="inner-popup">
                     <Header as="h1"> {isNew ? "Create" : "Edit"} Session</Header>
+                    
+                    
                     <Form className='session-form' id="session-form" value={this.state.id} onSubmit={this.handleSubmit}>
                         <Form.Group>
                             <Segment className="client-trainer-select" >

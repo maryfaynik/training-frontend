@@ -173,3 +173,8 @@ form {
 .myloader {
   min-height: 30vh;
 }
+
+.profile-segment {
+   max-height: 40vh;
+   overflow: scroll;
+}

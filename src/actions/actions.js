@@ -172,8 +172,21 @@ export function addUser(user, userType){
 export function updateUser(user, userType){
     return {type: "UPDATE_USER", payload: {user, userType}}
 }
-export function deleteUser(id, userType){
-    return {type: "DELETE_USER", payload: {id, userType}}
+
+export function deleteClientPackage(id){
+    return {type: "DELETE_CLIENT_PACKAGE", payload: id}
+}
+
+
+export function deleteUser(user, dispatch){
+    user.sessions.forEach(session => dispatch(cancelSession(session.id)))
+    //delete client-packages
+    if(user.type === "Client"){
+        let packages = user.client_packages
+        packages.forEach(pack => dispatch(deleteClientPackage(pack.id)))
+    }
+
+    return {type: "DELETE_USER", payload: {id: user.id, userType: user.type}}
 }
 
 export function addSession(session){
@@ -223,6 +236,4 @@ export function sellPackage(client_package){
 export function decreaseSessionCount(cp_id){
     return {type: "DECREASE_SESSIONS", payload: cp_id}
 }    
-
-
 

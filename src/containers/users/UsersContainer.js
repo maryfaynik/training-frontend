@@ -1,11 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import {Button, Card, Menu, Input} from 'semantic-ui-react';
+import {Button, Card, Menu, Input, Confirm} from 'semantic-ui-react';
 
 import {getFullName, getAge, getLevelOptions} from '../../helpers/generalHelpers'
 import { deleteUser} from '../../actions/actions'
 import UserForm from './UserForm'
+import UserModal from './UserModal'
 import Loading from '../../components/Loading'
 import {API} from '../../App'
 
@@ -17,7 +18,7 @@ const defaultUser = {
     phone: "",
     level: {
         id: ""
-    },
+    }
 }
 
 class UsersContainer extends Component {
@@ -31,11 +32,26 @@ class UsersContainer extends Component {
         searchName: ""
     }
 
-    deleteUser = (e) => {
+    handleConfirm = () => {
+        this.setState({
+            confirmOpen: false,
+            confirmDelete: true
+        })
+    }
+    handleConfirmDelete = () => {
+        this.setState({
+            confirmOpen: false,
+            confirmDelete: false
+        })
+    }
+
+    handleDeleteUser = (e) => {
+    
         //eslint-disable-next-line
-        if(!confirm("Are you sure you want to delete this user?")) return 
-        
+        if(!window.confirm("are you sure you want to delete this user?")) return 
+
         let id = e.target.value
+        
         fetch(`${API}/${this.state.path}/${id}`, {
             method: "DELETE",
             headers: {
@@ -43,16 +59,19 @@ class UsersContainer extends Component {
                 "accepts": "application/json"
             },
         }).then (resp => resp.json())
-            .then(data => {
-                if(data.errors){
-                    this.setState({
-                        errors: data.errors.errors,
-                    });
-                }else{
-                    this.goBack(true)
-                    this.props.deleteUser(id, `${this.props.userType}`)
-                }
-            })
+        .then(data => {
+            if(data.errors){
+                this.setState({
+                    errors: data.errors.errors,
+                });
+
+            }else{ 
+               
+                let user = [...this.props.allTrainers, ...this.props.allClients].find(user => user.id === parseInt(id))
+                this.props.deleteUser(user)
+                this.goBack(true)
+            }
+        })
     }
 
     //Form Actions -------------------
@@ -76,6 +95,7 @@ class UsersContainer extends Component {
     }
 
     toggleForm = (e) => {
+   
         let editUser = defaultUser
         let enterNew = true
         if(!!e && e.target.value ){
@@ -103,15 +123,15 @@ class UsersContainer extends Component {
         if(this.state.enterNew){
             return <UserForm isNew={true} editUser={this.state.editUser} toggleForm={this.toggleForm} levelOptions={getLevelOptions(this.props.levels)} goBack={this.goBack} userType={this.props.userType}/>
         }else{
-            return <UserForm deleteUser={this.deleteUser} isNew={false} editUser={this.state.editUser} toggleForm={this.toggleForm} levelOptions={getLevelOptions(this.props.levels)} goBack={this.goBack} userType={this.props.userType}/>
+            return <UserForm handleDeleteUser={this.handleDeleteUser} isNew={false} editUser={this.state.editUser} toggleForm={this.toggleForm} levelOptions={getLevelOptions(this.props.levels)} goBack={this.goBack} userType={this.props.userType}/>
         }
     }
 
     renderAddButton(){
-        return (this.props.userType === "Trainer" ? 
-            <p><Button onClick={this.toggleForm}>Add A Trainer</Button></p>
-            : <p><Button onClick={this.toggleForm}>Add A Client</Button></p>
-        )
+        return  <p>
+            <Button onClick={this.toggleForm}>{`Add ${this.props.userType}`}</Button>
+        </p> 
+    
     }
 
     renderUsers = () => {
@@ -170,7 +190,7 @@ class UsersContainer extends Component {
 
     // RENDER --------------------------------
     render(){
-
+        
         return (
             
             <div className="train-container">
@@ -180,6 +200,12 @@ class UsersContainer extends Component {
                     <Input icon='search' placeholder='Search by Name...'
                         onChange={this.handleSearchChange} />
                 </Menu.Item>
+
+                <Confirm open={this.state.confirmOpen} onCancel={this.handleConfirmDelete} onConfirm={this.handleConfirm}
+                    content='Do you really want to delete this user?'
+                    header='Are you sure?'
+                    />
+
                 <p></p>
                 {this.props.allLoading ? 
                 <Loading/> 
@@ -206,6 +232,13 @@ const msp = (state) => {
         allLoading: state.app.allLoading
     }
 }
-export default connect(msp, {deleteUser})(withRouter(UsersContainer));
+
+const mdp = (dispatch) => {
+    return {
+        deleteUser: (user) => dispatch(deleteUser(user, dispatch)),
+    }
+}
+
+export default connect(msp, mdp)(withRouter(UsersContainer));
 
 

@@ -50,7 +50,11 @@ function scheduleReducer(state= defaultState, action) {
 
         case "ADD_CLIENT_PACKAGE":
             return {...state, clientPackages: [...state.clientPackages, action.payload]}
-        
+
+        case "DELETE_CLIENT_PACKAGE":
+            index = state.clientPackages.findIndex(pack => pack.id === parseInt(action.payload))
+            return {...state, clientPackages: [...state.clientPackages.slice(0, index), ...state.clientPackages.slice(index +1)]}
+    
         case "DECREASE_SESSIONS":
             newArray = [...state.clientPackages]
             index = state.clientPackages.findIndex(cp => cp.id === action.payload)

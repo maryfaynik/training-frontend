@@ -24,6 +24,12 @@ class UserForm extends Component {
         if(e.target.name){
             name = e.target.name
         }
+        if(name === "dob"){
+            console.log("here, e.target.value =", e.target.value)
+            let date = new Date(e.target.value)
+            if(date.getTime() !== date.getTime()) return
+
+        }
         this.setState({
             [name]: value
         })
@@ -128,7 +134,7 @@ class UserForm extends Component {
     
                 </Form>
                 
-                { !this.props.isNew ? <p><Button size="small" value={this.state.id} onClick={this.props.deleteUser}>Delete User</Button> </p>: null}  
+                { !this.props.isNew ? <p><Button size="small" value={this.state.id} onClick={this.props.handleDeleteUser}>Delete User</Button> </p>: null}  
                 
                 <p>
                     <Button primary type="submit" form={"user-form"}>{this.props.isNew ? "Submit" : "Save Changes" }</Button>
