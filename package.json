@@ -1,6 +1,5 @@
 {
   "name": "training-manager-frontend",
-  "main": "server.js",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -32,13 +31,11 @@
     "typescript": "^3.7.4",
     "utf-8-validate": "^5.0.2"
   },
-  "homepage": "/training-frontend/",
   "engines": {
     "node": "10.16.3",
     "npm": "6.9.0"
   },
   "scripts": {
-    "heroku-postbuild": "npm install && npm run build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -61,6 +58,5 @@
   },
   "devDependencies": {
     "gh-pages": "^2.1.1"
-  },
-  "proxy": "http://localhost:5000/"
+  }
 }
