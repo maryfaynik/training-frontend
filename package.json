@@ -32,7 +32,7 @@
     "typescript": "^3.7.4",
     "utf-8-validate": "^5.0.2"
   },
-  "homepage": "https://maryfarner18.github.io/training-frontend/",
+  "homepage": "/training-frontend/",
   "engines": {
     "node": "10.16.3",
     "npm": "6.9.0"
