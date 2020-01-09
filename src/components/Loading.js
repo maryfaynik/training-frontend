@@ -10,12 +10,12 @@ const Loading = props => {
               <Loader>Loading</Loader>
           </Dimmer>
     }else if(props.nonsegment){
-      return <Dimmer className={"myloader"} active >
+      return <Dimmer className={"myloader"} inverted active >
               <Loader>Loading</Loader>
           </Dimmer>
     }else{
       return <Segment>
-          <Dimmer className={"myloader"} active >
+          <Dimmer className={"myloader"} inverted active >
               <Loader>Loading</Loader>
           </Dimmer>
         </Segment>

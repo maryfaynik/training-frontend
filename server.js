@@ -1,9 +1,13 @@
-const io = require('socket.io')();
+const express = require('express');
+const path = require('path');
+const app = express();
 
-io.on('connection', (client) => {
-    // here you can start emitting events to the client 
-  });
+const PORT = process.env.PORT || 5000;
 
-const port = 8000;
-io.listen(port);
-console.log('listening on port ', port);
+app
+  .use(express.static(path.join(__dirname, '/build')))
+  .listen(PORT, () => console.log(`Listening on ${PORT}`));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '/build/index.html'));
+});

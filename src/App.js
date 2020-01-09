@@ -31,6 +31,7 @@ class App extends Component {
           if(data.status !== 200){
             localStorage.removeItem("user_id")
             this.props.setUser({})
+            this.props.setUserLoading(false)
 
           //on success keep cached login info and set user
           }else{

@@ -60,7 +60,7 @@ export class Login extends Component {
           //set the user in redux
           this.props.setUser(user);
           this.props.setUserLoading(false)
-          console.log("fetching all the shitsssss LOGIN")
+          console.log("fetching all the sssstuffs LOGIN")
           //fetch this user's clients, sessions, and trainers
           this.props.initialFetch(user)
           
