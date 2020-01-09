@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Form, Button} from 'semantic-ui-react';
+import { Form, Button, Label, Header} from 'semantic-ui-react';
 
 import {addPackage, updatePackage, deletePackage} from '../../actions/actions'
 import { getLevelOptions } from '../../helpers/generalHelpers';
@@ -128,21 +128,21 @@ class AddEditPackageForm extends Component {
     }
 
     render(){
-        
-       
         return (
             <div className= 'outer-popup'>
             <div className="inner-popup">
                 <Form className='package-form' id="package-form" value={this.state.id} onSubmit={this.handleSubmit}>
-                    <Form.Group widths='equal'>
+                    <Header as="h3">{this.props.isNew ? "New" : "Edit"} Package</Header>
+                    <Form.Group >
                         <Form.Input onChange={this.handleChange} value={this.state.title} name="title" label='Title' type="text"/>
                     </Form.Group>
-                    <Form.Group> 
-                        <Form.Input onChange={this.handleChange} value={this.state.session_count} name="session_count" label='Number of Sessions' type="number"/>
-                        <Form.Input onChange={this.handleChange} value={this.state.exp_weeks} name="exp_weeks" label='Expiration Weeks' type="number"/>
+                    <Form.Group > 
+                        <Form.Input onChange={this.handleChange} value={this.state.session_count} name="session_count" label='Session Count' type="number"/>
+                        <Form.Input onChange={this.handleChange} value={this.state.exp_weeks} name="exp_weeks" label="Expiration (weeks)" labelPosition='right' type="number"/>
                     </Form.Group> 
-                    <Form.Group>
-                        <Form.Input onChange={this.handleChange} value={this.state.price} name="price" label='Price' type="number"/>
+                    <Form.Group >
+                        <Form.Input onChange={this.handleChange} value={this.state.price} name="price" labelPosition='right' 
+                                    label="Price" type='number' placeholder='Price' icon='dollar sign' iconPosition='left'/>
                         <Form.Select
                             onChange={this.handleChange}
                             value={this.state.level_id}

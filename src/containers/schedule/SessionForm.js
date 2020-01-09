@@ -32,6 +32,12 @@ class SessionForm extends Component {
             value = e.target.value
             name = e.target.name
         }
+
+        if(name === "date"){
+            let date = new Date(e.target.value)
+            if(date.getTime() !== date.getTime()) return
+
+        }
         this.setState({
             [name]: value
         })
@@ -140,18 +146,18 @@ class SessionForm extends Component {
         }       
     }
 
-    handleConfirm = () => {
-        this.setState({
-            confirmOpen: false,
-            confirmCancel: true
-        })
-    }
-    handleConfirmCancel = () => {
-        this.setState({
-            confirmOpen: false,
-            confirmCancel: false
-        })
-    }
+    // handleConfirm = () => {
+    //     this.setState({
+    //         confirmOpen: false,
+    //         confirmCancel: true
+    //     })
+    // }
+    // handleConfirmCancel = () => {
+    //     this.setState({
+    //         confirmOpen: false,
+    //         confirmCancel: false
+    //     })
+    // }
 
     handleStatus = (e, status) =>{
 

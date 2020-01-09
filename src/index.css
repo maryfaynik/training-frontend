@@ -178,3 +178,7 @@ form {
    max-height: 40vh;
    overflow: scroll;
 }
+
+.package-input {
+  width: 15%;
+}
