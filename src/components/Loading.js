@@ -26,7 +26,7 @@ const Loading = props => {
   return (
     // <div className="loading">
   
-    renderDimmer(props.full === true)
+    renderDimmer(props.full )
     
     
     // </div>
