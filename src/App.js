@@ -23,7 +23,7 @@ class App extends Component {
       fetch(`${API}/auto_login`, {
         headers: {
           Authorization: user_id,
-        },
+        }
       }).then(res => res.json())
         .then(data => {
           
@@ -36,11 +36,11 @@ class App extends Component {
           //on success keep cached login info and set user
           }else{
 
-            this.props.setUser(data.data);
+            let user=data.user
+            this.props.setUser(user);
             this.props.setUserLoading(false)
 
             //fetch this user's clients, sessions, and trainers
-            let user=data.data
             console.log("fetching all the stuff autologin")
             this.props.initialFetch(user)
           }
