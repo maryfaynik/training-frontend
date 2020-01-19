@@ -19,7 +19,7 @@ const Main = (props) => {
 const msp = (state) => {
     return {
         user: state.user.user,
-        allLoading: state.app.allLoading,
+        loading: state.app.loading,
         userLoading: state.app.userLoading
     }
 }

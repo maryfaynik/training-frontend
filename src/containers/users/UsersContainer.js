@@ -207,7 +207,7 @@ class UsersContainer extends Component {
                     />
 
                 <p></p>
-                {this.props.allLoading ? 
+                {this.props.loading ? 
                 <Loading/> 
                 : 
                 <Card.Group>
@@ -229,7 +229,7 @@ const msp = (state) => {
         allTrainers: state.user.allTrainers,
         allClients: state.user.allClients,
         levels: state.app.levels,
-        allLoading: state.app.allLoading
+        loading: state.app.loading
     }
 }
 

@@ -167,12 +167,12 @@ class ScheduleContainer extends Component {
                                 icon="filter"
                                 selection
                                 onChange={this.handleTrainerSelect}
-                                options={this.props.allLoading? [] : [ {key: "all", text: "Show All", value: "all"}, ...getTrainerOptions(allTrainers)]}/>
+                                options={this.props.loading? [] : [ {key: "all", text: "Show All", value: "all"}, ...getTrainerOptions(allTrainers)]}/>
                         </Menu.Item>
                         </Menu.Menu>
                     : null }
                 </Menu> 
-                {this.props.allLoading ? 
+                {this.props.loading ? 
                 <Grid><Grid.Row><Grid.Column><Loading/></Grid.Column></Grid.Row></Grid>
                 : 
                 <Calendar className="calendar"
@@ -211,7 +211,7 @@ const msp = (state) => {
         allSessions: state.schedule.allSessions,
         allClients: state.user.allClients,
         allTrainers: state.user.allTrainers,
-        allLoading: state.app.allLoading
+        loading: state.app.loading
     }
 }
 export default connect(msp)(withRouter(ScheduleContainer));

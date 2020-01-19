@@ -6,7 +6,8 @@ export function setUser(user, dispatch){
     return {type: "SET_USER", payload: user }
 }
 
-export function setUsers(dispatch, users, userType){
+export function setUsers(users, userType){
+    console.log("in action userType = ", userType)
     return {type: "SET_USERS", payload: {users, userType} }
 }
     
@@ -34,134 +35,164 @@ export function setUserLoading(flag){
     return {type: "SET_USER_LOADING", payload: flag}
 }
 
-export function setAllLoading(flag){
-
-    return {type: "SET_ALL_LOADING", payload: flag}
+export function setLoading(flag){
+    return {type: "SET_LOADING", payload: flag}
 }
 
 
 // GETTERS ==================================
 
-export function initialFetch(user) {
-    return function(dispatch){
-        switch(user.type){
+export function initialFetch(user, type) {
+    return dispatch => {
+        switch(type){
             case "Trainer": //get this trianers clients and sessions, set trainers to this user
-              getClients(dispatch, user.id, user)
-              getRecentSessions(dispatch, user.id)
-              setUsers(dispatch, [user], "Trainer")
-              break
+                return Promise.all([
+                    getClients(dispatch, user.id),
+                    getSessions(dispatch, user.id),
+                    setUsers([user], "Trainer"),
+                    dispatch(getLevels(dispatch)),
+                    getPackages(dispatch),
+                    getClientPackages(dispatch)
+                ]);
             case "Client": // get this client's session and trainers, set clients to this user
-              getTrainers(dispatch, user.id, user)
-              getRecentSessions(dispatch, user.id)
-              setUsers(dispatch, [user], "Client")
-              break
+                return Promise.all([
+                    getTrainers(dispatch, user.id),
+                    getSessions(dispatch, user.id),
+                    setUsers([user], "Client"),
+                    getLevels(dispatch),
+                    getPackages(dispatch),
+                    getClientPackages(dispatch)
+                ]);
             default: // Get all of everything...for manager
-              getClients(dispatch, null, user)
-              getTrainers(dispatch)
-              getRecentSessions(dispatch)
-              break
+                console.log('here, manager promise')
+                return Promise.all([
+                    dispatch(getClients(dispatch)),
+                    dispatch(getTrainers(dispatch)),
+                    dispatch(getSessions(dispatch)),
+                    dispatch(getLevels(dispatch)),
+                    dispatch(getPackages(dispatch)),
+                    dispatch(getClientPackages(dispatch))
+                ]).then( ()=>{
+                    console.log("DONE LOADNG!")
+                    dispatch(setLoading(false))
+                 })
+
           }
+        
+    }
+    
+  }
 
-          // get all the levels
-          getLevels(dispatch)
-          // get all the packages
-          getPackages(dispatch)
-          // get all client-packages
-          getClientPackages(dispatch)
+// export function initialFetch(user, type) {
+//     return function(dispatch){
+//         switch(type){
+//             case "Trainer": //get this trianers clients and sessions, set trainers to this user
+//               getClients(dispatch, user.id)
+//               getSessions(dispatch, user.id)
+//               setUsers(dispatch, [user], "Trainer")
+//               break
+//             case "Client": // get this client's session and trainers, set clients to this user
+//               getTrainers(dispatch, user.id)
+//               getSessions(dispatch, user.id)
+//               setUsers(dispatch, [user], "Client")
+//               break
+//             default: // Get all of everything...for manager
+//               getClients(dispatch)
+//               getTrainers(dispatch)
+//               getSessions(dispatch)
+//               break
+//           }
 
+//           // get all the levels
+//           getLevels(dispatch)
+//           // get all the packages
+//           getPackages(dispatch)
+//           // get all client-packages
+//           getClientPackages(dispatch)
 
-          //now go back and get alll the sessions
-          // Loading will likely be set to false much sooner
-          // after the clients are fetched
+//         //   dispatch(setLoading(false))
+
+//           //now go back and get alll the sessions
+//           // Loading will likely be set to false much sooner
+//           // after the clients are fetched
           
+//     }
+// }
+
+export function getLevels(dispatch){
+    return dispatch => {
+        console.log('about to fetch levels')
+        return fetch(`${API}/levels`)
+        .then(res => res.json())
+        .then(data => {
+            console.log('fetched and got levels')
+            dispatch(setLevels(data.levels))
+        })
     }
 }
 
-export function getLevels(dispatch){
-    fetch(`${API}/levels`)
-    .then(res => res.json())
-    .then(data => {
-        dispatch(setLevels(data.levels))
-    })
-}
-
 export function getClientPackages(dispatch){
-    fetch(`${API}/client_packages`)
-    .then(res => res.json())
-    .then(data => {
-        dispatch(setClientPackages(data.client_packages))
-    })
+    return dispatch => { 
+        console.log('about to fetch client pakcages')
+        return fetch(`${API}/client_packages`)
+        .then(res => res.json())
+        .then(data => {
+            console.log('fetched and got client packages')
+            dispatch(setClientPackages(data.client_packages))
+        })
+    }
 }
 
 export function getPackages(dispatch){
-    fetch(`${API}/packages`)
-    .then(res => res.json())
-    .then(data => {
-        dispatch(setPackages(data.packages))
-    })
-}
-
-export function getRecentSessions(dispatch, id = null){
-    let url = id ? `${API}/recentusersessions/${id}` : `${API}/recentsessions`
-        fetch(url)
+    return dispatch => {
+        console.log('about to fetch packages')
+        return fetch(`${API}/packages`)
         .then(res => res.json())
         .then(data => {
-
-            dispatch(setSessions(data.sessions))
+            console.log('fetched and got packages')
+            dispatch(setPackages(data.packages))
         })
+    }
 }
+
 export function getSessions(dispatch, id = null){
-    let url = id ? `${API}/usersessions/${id}` : `${API}/sessions`
-        fetch(url)
+    return dispatch => {
+        console.log('about to fetch sessions')
+        let url = id ? `${API}/usersessions/${id}` : `${API}/sessions`
+        return fetch(url)
         .then(res => res.json())
         .then(data => {
-
+            console.log('fetched and got sessions')
             dispatch(setSessions(data.sessions))
         })
+    }
 }
 
-export function getClients(dispatch, id = null, user){
-    let url = id ? `${API}/userclients/${id}` : `${API}/clients`
-        fetch(url)
+
+export function getClients(dispatch, id = null){
+    return dispatch => {
+        console.log('about to fetch clients')
+        let url = id ? `${API}/userclients/${id}` : `${API}/clients`
+        return fetch(url)
         .then(res => res.json())
         .then(data => {
-            dispatch(setUsers(dispatch, data.users, "Client"))
-            dispatch(setAllLoading(false))
-            switch(user.type){
-                case "Trainer": 
-                  getSessions(dispatch, user.id)
-                  break
-                case "Client": 
-                  getSessions(dispatch, user.id)
-                  break
-                default:
-                  getSessions(dispatch)
-                  break
-            }
+            console.log('fetched and got clients')
+            dispatch(setUsers(data.clients, "Client"))
         })
+    }
 }
 
-export function getTrainers(dispatch, id = null, user){
-    let url = id ? `${API}/usertrainers/${id}` : `${API}/trainers`
-        fetch(url)
+export function getTrainers(dispatch, id = null){
+    return dispatch => {
+        console.log('about to fetch trainers')
+        let url = id ? `${API}/usertrainers/${id}` : `${API}/trainers`
+        return fetch(url)
         .then(res => res.json())
         .then(data => {
-            dispatch(setUsers(dispatch, data.users, "Trainer"))
-            if(id){ 
-                dispatch(setAllLoading(false))
-                switch(user.type){
-                    case "Trainer": 
-                      getSessions(dispatch, user.id)
-                      break
-                    case "Client": 
-                      getSessions(dispatch, user.id)
-                      break
-                    default:
-                      getSessions(dispatch)
-                      break
-                }
-            } 
+            console.log('fetched and got trainers')
+            dispatch(setUsers(data.trainers, "Trainer"))
         })
+        }
 }
 
 // CRUD =================================================
@@ -177,10 +208,8 @@ export function deleteClientPackage(id){
     return {type: "DELETE_CLIENT_PACKAGE", payload: id}
 }
 
-
 export function deleteUser(user, dispatch){
     user.sessions.forEach(session => dispatch(cancelSession(session.id)))
-    //delete client-packages
     if(user.type === "Client"){
         let packages = user.client_packages
         packages.forEach(pack => dispatch(deleteClientPackage(pack.id)))

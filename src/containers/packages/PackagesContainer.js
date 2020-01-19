@@ -144,7 +144,7 @@ class PackagesContainer extends Component {
   
                 <Divider/>
                 <Grid>
-                {this.props.allLoading? 
+                {this.props.loading? 
                   <Grid.Row><Grid.Column><Loading/></Grid.Column></Grid.Row>
                 :  
                     this.renderLevelPackages()
@@ -164,7 +164,7 @@ const msp = (state) => {
         packages: state.app.packages,
         levels: state.app.levels,
         allClients: state.user.allClients,
-        allLoading: state.app.allLoading
+        loading: state.app.loading
     }
 }
 export default connect(msp, {deletePackage, updatePackage, addPackage})(withRouter(PackagesContainer));
