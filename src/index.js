@@ -20,7 +20,10 @@ const API_WS_ROOT = "ws://training-manager-backend.herokuapp.com/api/v1"
 
 const store = createStore(
     rootReducer,
-    applyMiddleware(thunk)
+    compose(
+        applyMiddleware(thunk), 
+        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    )
 )
 
 ReactDOM.render(

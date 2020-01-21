@@ -7,7 +7,7 @@ import ManagerDash from '../containers/navigation/ManagerDash'
 const Landing = (props) => {
 
   const renderDash = () => {
-    switch(props.user.type){
+    switch(props.user.user_type){
       case "Manager":
         return <ManagerDash/>
       default:

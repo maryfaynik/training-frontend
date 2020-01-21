@@ -10,7 +10,7 @@ import {getFullName, getAge, getUserFromId} from '../../helpers/generalHelpers'
 class UserProfile extends Component {
 
     state = {
-        path: this.props.user.type === "Trainer" ? "trainers" : "clients",
+        path: this.props.user.user_type === "Trainer" ? "trainers" : "clients",
         errors: []
     }
 
@@ -89,9 +89,9 @@ class UserProfile extends Component {
                         <Grid.Column width={2}><Image src='/img/profilepic.png' alt="Profile Pic" size='large' /></Grid.Column>
                         <Grid.Column width={8}><Header as="h1">{getFullName(user)}</Header></Grid.Column>
                     </Grid.Row>
-                    {user.type === "Trainer" ? this.renderTrainer() : this.renderClient()} 
+                    {user.user_type === "Trainer" ? this.renderTrainer() : this.renderClient()} 
                     <Grid.Row colums={1}>
-                        { currentUser.id === user.id || currentUser.type === "Manager" ? <Button value={user.id} onClick={this.showEdit}>Edit</Button> : null }
+                        { currentUser.id === user.id || currentUser.user_type === "Manager" ? <Button value={user.id} onClick={this.showEdit}>Edit</Button> : null }
                         <Button  onClick={() => this.props.history.goBack()}>Back</Button>
                     </Grid.Row>
                 </Grid>

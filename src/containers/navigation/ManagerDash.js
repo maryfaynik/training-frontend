@@ -26,7 +26,7 @@ class ManagerDash extends Component {
 
 renderStats = (backDate, time) => {
     let stats
-    if(!this.props.allLoading) stats = this.getSessionStats(backDate)
+    if(!this.props.loading) stats = this.getSessionStats(backDate)
     return (
          <Grid.Column key={time}>
             <Card className={"dash-card"}>
@@ -34,7 +34,7 @@ renderStats = (backDate, time) => {
                 <Card.Header>This {`${time}`}</Card.Header>
                 </Card.Content>
                 <Card.Content>
-                { this.props.allLoading ? 
+                { this.props.loading ? 
                     <Loading inverted={true} nonsegment={true}/>
                 :
                     <Feed>
@@ -108,7 +108,7 @@ const msp = (state) => {
     allSessions: state.schedule.allSessions,
     allClients: state.user.allClients,
     clientPackages: state.app.clientPackages,
-    allLoading: state.app.allLoading
+    loading: state.app.loading
   }
 }
 

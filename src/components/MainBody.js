@@ -109,7 +109,7 @@ const msp = (state) => {
         user: state.user.user,
         allTrainers: state.user.allTrainers,
         allClients: state.user.allClients,
-        allLoading: state.app.allLoading
+        loading: state.app.loading
     }
 }
 

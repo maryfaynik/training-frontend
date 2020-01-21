@@ -4,19 +4,19 @@ import { withRouter, Link } from 'react-router-dom'
 import { Form, Button, Grid, Radio, Segment, Menu } from 'semantic-ui-react';
 import { API } from '../../App';
 
-import {setUser, initialFetch, setUserLoading, setAllLoading} from '../../actions/actions'
+import {setUser, initialFetch, setUserLoading, setLoading} from '../../actions/actions'
 
 export class Login extends Component {
 
   state = {
     email: '',
     password: '',
-    type: 'Manager',
+    user_type: 'Manager',
     errors: '',
   };
 
   handleChange = (e, {value}) => {
-    let name = "type"
+    let name = "user_type"
     if(e.target.name){
       value = e.target.value
       name = e.target.name
@@ -29,12 +29,12 @@ export class Login extends Component {
   //Upon login submit, check user auth
   handleSubmit = event => {
     event.preventDefault();
-    const { email, password, type } = this.state;
+    const { email, password, user_type } = this.state;
 
     const user = {
       email,
       password,
-      type
+      user_type
     };
 
     fetch(`${API}/login`, {
@@ -49,23 +49,29 @@ export class Login extends Component {
       .then(data => {
     
         // If the user is valid, log them in...
-        if (data.data) {
-          this.props.setAllLoading(true)
+        if (data.user) {
+          this.props.setLoading(true)
           this.props.setUserLoading(true)
-          let user = data.data
 
+          let user = data.user.user
+           
           //cache the info
-          localStorage.user_id = user.id;
-
+          console.log("setting localstorage to, ", user.id)
+          localStorage.user_id = user.id
+          console.log("localStorage[user_id] =", localStorage["user_id"])
+          
           //set the user in redux
+          console.log("setting user to", user)
           this.props.setUser(user);
           this.props.setUserLoading(false)
+          
           console.log("fetching all the sssstuffs LOGIN")
           //fetch this user's clients, sessions, and trainers
           this.props.initialFetch(user)
           
         // If user is not valid / found, set user to null and record errors
         } else {
+          console.log("trouble in paradise")
           this.props.setUser({});
           this.props.setUserLoading(false)
           localStorage.removeItem("user_id")
@@ -117,27 +123,27 @@ export class Login extends Component {
                 <Grid.Column width={5}>
                   <Radio
                     label='Trainer'
-                    name='type'
+                    name='user_type'
                     value='Trainer'
-                    checked={this.state.type === 'Trainer'}
+                    checked={this.state.user_type === 'Trainer'}
                     onChange={this.handleChange}
                   />
                 </Grid.Column>
                 <Grid.Column width={5}>
                   <Radio
                     label='Manager'
-                    name='type'
+                    name='user_type'
                     value='Manager'
-                    checked={this.state.type === 'Manager'}
+                    checked={this.state.user_type === 'Manager'}
                     onChange={this.handleChange}
                   />
                 </Grid.Column>
                 <Grid.Column width={5}>
                   <Radio
                     label='Client'
-                    name='type'
+                    name='user_type'
                     value='Client'
-                    checked={this.state.type === 'Client'}
+                    checked={this.state.user_type === 'Client'}
                     onChange={this.handleChange}
                   />
                 </Grid.Column>
@@ -163,7 +169,7 @@ const mdp = (dispatch) =>{
       initialFetch: (user) => dispatch(initialFetch(user)),
       setUser: (user) => dispatch(setUser(user, dispatch)),
       setUserLoading: (flag) => dispatch(setUserLoading(flag)),
-      setAllLoading: (flag) => dispatch(setAllLoading(flag))
+      setLoading: (flag) => dispatch(setLoading(flag))
     }
 }
 

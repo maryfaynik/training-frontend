@@ -19,10 +19,15 @@ export const getResources = (trainers, trainer) =>{
 }
 
 export const getEvents = (sessions, clients, trainer) =>{
+    console.log("sessions = ", sessions)
+    console.log("clients = ", clients)
+    console.log("trainer = ", trainer)
     if(trainer.id){
         sessions = sessions.filter(session => session.trainer_id === trainer.id)
     }
+
     let liveSessions = sessions.filter(ses => ses.status !== "cancelled")
+    
     return liveSessions.map(session => {
         let end = new Date(session.daytime)
         end.setMinutes(end.getMinutes() + session.length)

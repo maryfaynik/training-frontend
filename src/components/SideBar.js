@@ -8,7 +8,7 @@ import { setActivePage } from '../actions/actions'
 const SideBar = (props) => {
   
     const getInfo = () => {
-        switch(props.type){
+        switch(props.user_type){
             case "Manager":
                 return {
                     schedule: {name: "Schedule", to: "/schedule"},
@@ -111,7 +111,7 @@ const SideBar = (props) => {
 const msp = (state) => {
     return {
         activeItem: state.app.activePage,
-        type: state.user.user.type
+        user_type: state.user.user_type
     }
 
 }

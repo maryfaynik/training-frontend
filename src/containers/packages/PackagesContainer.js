@@ -69,7 +69,7 @@ class PackagesContainer extends Component {
     }
     
     renderAddButton = () =>{
-        return this.props.user.type === "Manager" ? <Button name="add" onClick={(e) => this.handleClick(e, -1)}><Icon name="plus"/>Add Package</Button> : null
+        return this.props.user.user_type === "Manager" ? <Button name="add" onClick={(e) => this.handleClick(e, -1)}><Icon name="plus"/>Add Package</Button> : null
     }
 
     // Render the level sections for the package list
@@ -92,7 +92,7 @@ class PackagesContainer extends Component {
 
     // Render the packages in the sub-heading 
     renderPackages = (packs) => {
-        let type = this.props.user.type
+        let type = this.props.user.user_type
         
         let options = {
             "Manager": {
@@ -144,7 +144,7 @@ class PackagesContainer extends Component {
   
                 <Divider/>
                 <Grid>
-                {this.props.allLoading? 
+                {this.props.loading? 
                   <Grid.Row><Grid.Column><Loading/></Grid.Column></Grid.Row>
                 :  
                     this.renderLevelPackages()
@@ -164,7 +164,7 @@ const msp = (state) => {
         packages: state.app.packages,
         levels: state.app.levels,
         allClients: state.user.allClients,
-        allLoading: state.app.allLoading
+        loading: state.app.loading
     }
 }
 export default connect(msp, {deletePackage, updatePackage, addPackage})(withRouter(PackagesContainer));

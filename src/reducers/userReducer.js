@@ -1,8 +1,7 @@
 const defaultState = {
   user: {},
   allClients: [],
-  allTrainers: [],
-  allUsers: []
+  allTrainers: []
 }
 
 function userReducer(state = defaultState, action) {
@@ -14,27 +13,28 @@ function userReducer(state = defaultState, action) {
         return {...state, user: action.payload}
 
       case "SET_USERS":
-        
-        key = `all${action.payload.userType}s`
+        key = `all${action.payload.user_type}s`
+        console.log('setting ', key, 'to ', action.payload.users)
         return {...state, [key]: action.payload.users} 
 
       case "ADD_USER":
-        key = `all${action.payload.userType}s`
-        return {...state, [key]: [...state[key], action.payload.user]} 
+        key = `all${action.payload.user_type}s`
+        return {...state, [key]: [...state[key], action.payload]} 
 
       case "UPDATE_USER":
-        if(action.payload.userType === "Manager"){
-          return {...state, user: action.payload.user}
+        console.log("action payload = ", action.payload)
+        if(action.payload.user_type === "Manager"){
+          return {...state, user: action.payload}
         }else{
-          key = `all${action.payload.userType}s`
+          key = `all${action.payload.user_type}s`
           newArray = [...state[key]]
-          index = newArray.findIndex(user => user.id === action.payload.user.id)
-          newArray[index] = {...action.payload.user}
+          index = newArray.findIndex(user => user.id === action.payload.id)
+          newArray[index] = {...action.payload}
           return {...state, [key]: [...newArray]}
         }
 
       case "DELETE_USER":
-        key = `all${action.payload.userType}s`
+        key = `all${action.payload.user_type}s`
         index = state[key].findIndex(user => user.id === parseInt(action.payload.id))
         return {...state, [key]: [...state[key].slice(0, index), ...state[key].slice(index +1)]}
       

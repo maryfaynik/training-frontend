@@ -6,7 +6,6 @@ const defaultState = {
     packages: [],
     clientPackages: [],
     userLoading: true,
-    allLoading: true,
     loading: true
   }
   
@@ -14,8 +13,8 @@ function scheduleReducer(state= defaultState, action) {
     let newArray
     let index
     switch (action.type) {
-        case "SET_ALL_LOADING":
-            return {...state, allLoading: action.payload}
+        case "SET_LOADING":
+            return {...state, loading: action.payload}
         
         case "SET_USER_LOADING":
             return {...state, userLoading: action.payload}

@@ -1,32 +1,32 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
 import NavBar from './components/NavBar'
 import Main from './components/Main'
 
-import {initialFetch, setUser, setUserLoading} from './actions/actions'
+import {initialFetch, setUser, setUserLoading, setLoading} from './actions/actions'
 
-export const API = "http://localhost:3000/api/v1"
-// export const API = "https://training-manager-backend.herokuapp.com/api/v1"
+// export const API = "http://localhost:3000/api/v1"
+export const API = "https://training-manager-backend.herokuapp.com/api/v1"
 
-class App extends Component {
-
-  state= {
-    
-  }
-
+//const App = (props) => {
+class App extends React.Component{
+  //const useEffect = () =>{
   componentDidMount(){
-    const user_id = localStorage.user_id;
+    const userId = localStorage.user_id;
   
-    if (user_id) {
+    if (userId) {
+      console.log('checking for id ', userId)
+      
       fetch(`${API}/auto_login`, {
         headers: {
-          Authorization: user_id,
-        },
+          Authorization: userId,
+        }
       }).then(res => res.json())
         .then(data => {
           
+          console.log("on checking for user got back", data)
           //if cached login info fails, clear cache and force login
           if(data.status !== 200){
             localStorage.removeItem("user_id")
@@ -36,13 +36,14 @@ class App extends Component {
           //on success keep cached login info and set user
           }else{
 
-            this.props.setUser(data.data);
+            console.log("found the user")
+            let user= data.user.user
+            this.props.setUser(user);
             this.props.setUserLoading(false)
 
             //fetch this user's clients, sessions, and trainers
-            let user=data.data
             console.log("fetching all the stuff autologin")
-            this.props.initialFetch(user)
+            this.props.initialFetch(user).then(this.props.setLoading(false))
           }
 
         })
@@ -52,14 +53,13 @@ class App extends Component {
   
   }
 
-render(){
-
-    return (
-      <div className="app">
-        <NavBar/>
-       <Main/>
-      </div>
-    )
+  render(){
+  return (
+    <div className="app">
+      <NavBar/>
+      <Main/>
+    </div>
+  )
   }
     
 }
@@ -67,7 +67,7 @@ render(){
 const msp = (state) =>{
   return {
     user: state.user.user,
-    allLoading: state.app.allLoading,
+    loading: state.app.loading,
     userLoading: state.app.userLoading,
     loading: state.app.loading
   }
@@ -77,7 +77,8 @@ const mdp = (dispatch) =>{
   return {
     initialFetch: (user) => dispatch(initialFetch(user)),
     setUser: (user) => dispatch(setUser(user, dispatch)),
-    setUserLoading: (flag) => dispatch(setUserLoading(flag))
+    setUserLoading: (flag) => dispatch(setUserLoading(flag)),
+    setLoading: (flag) => dispatch(setLoading(flag))
   }
 }
 
