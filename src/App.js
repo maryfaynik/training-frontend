@@ -10,6 +10,8 @@ import {initialFetch, setUser, setUserLoading, setLoading} from './actions/actio
 // export const API = "http://localhost:3000/api/v1"
 export const API = "https://training-manager-backend.herokuapp.com/api/v1"
 
+
+
 //const App = (props) => {
 class App extends React.Component{
   //const useEffect = () =>{
