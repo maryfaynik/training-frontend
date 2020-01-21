@@ -2,13 +2,13 @@ import { API } from '../App'
 
 // SETTERS =======================================
 
-export function setUser(user, dispatch){
+export function setUser(user){
     return {type: "SET_USER", payload: user }
 }
 
-export function setUsers(users, userType){
-    console.log("in action userType = ", userType)
-    return {type: "SET_USERS", payload: {users, userType} }
+export function setUsers(users, user_type){
+    console.log("in action user_type = ", user_type)
+    return {type: "SET_USERS", payload: {users, user_type} }
 }
     
 export function setSessions(sessions){
@@ -42,7 +42,8 @@ export function setLoading(flag){
 
 // GETTERS ==================================
 
-export function initialFetch(user, type) {
+export function initialFetch(user) {
+    let type = user.user_type
     return dispatch => {
         switch(type){
             case "Trainer": //get this trianers clients and sessions, set trainers to this user
@@ -83,41 +84,6 @@ export function initialFetch(user, type) {
     
   }
 
-// export function initialFetch(user, type) {
-//     return function(dispatch){
-//         switch(type){
-//             case "Trainer": //get this trianers clients and sessions, set trainers to this user
-//               getClients(dispatch, user.id)
-//               getSessions(dispatch, user.id)
-//               setUsers(dispatch, [user], "Trainer")
-//               break
-//             case "Client": // get this client's session and trainers, set clients to this user
-//               getTrainers(dispatch, user.id)
-//               getSessions(dispatch, user.id)
-//               setUsers(dispatch, [user], "Client")
-//               break
-//             default: // Get all of everything...for manager
-//               getClients(dispatch)
-//               getTrainers(dispatch)
-//               getSessions(dispatch)
-//               break
-//           }
-
-//           // get all the levels
-//           getLevels(dispatch)
-//           // get all the packages
-//           getPackages(dispatch)
-//           // get all client-packages
-//           getClientPackages(dispatch)
-
-//         //   dispatch(setLoading(false))
-
-//           //now go back and get alll the sessions
-//           // Loading will likely be set to false much sooner
-//           // after the clients are fetched
-          
-//     }
-// }
 
 export function getLevels(dispatch){
     return dispatch => {
@@ -196,12 +162,13 @@ export function getTrainers(dispatch, id = null){
 }
 
 // CRUD =================================================
-export function addUser(user, userType){
-    return {type: "ADD_USER", payload: {user, userType}}
+export function addUser(user){
+    return {type: "ADD_USER", payload: user}
 }    
 
-export function updateUser(user, userType){
-    return {type: "UPDATE_USER", payload: {user, userType}}
+export function updateUser(user){
+    console.log("in action, user = ", user)
+    return {type: "UPDATE_USER", payload: user}
 }
 
 export function deleteClientPackage(id){
@@ -210,12 +177,12 @@ export function deleteClientPackage(id){
 
 export function deleteUser(user, dispatch){
     user.sessions.forEach(session => dispatch(cancelSession(session.id)))
-    if(user.type === "Client"){
+    if(user.user_type === "Client"){
         let packages = user.client_packages
         packages.forEach(pack => dispatch(deleteClientPackage(pack.id)))
     }
 
-    return {type: "DELETE_USER", payload: {id: user.id, userType: user.type}}
+    return {type: "DELETE_USER", payload: {id: user.id, user_type: user.user_type}}
 }
 
 export function addSession(session){

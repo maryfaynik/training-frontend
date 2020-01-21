@@ -39,19 +39,21 @@ class UserForm extends Component {
     handleSubmit = (e) =>{
         e.preventDefault()
         let {isNew} = this.props
+        let type = this.props.userType.toLowerCase()
 
         let newUser = {
-            user: {
+            [type]: {
                 first_name: this.state.first_name,
                 last_name: this.state.last_name,
                 dob: this.state.dob,
                 email: this.state.email,
                 phone: this.state.phone,
-                gender: this.state.gender
-            },
-            type: this.props.userType
+                gender: this.state.gender,
+                user_type: this.props.userType
+            }
         }
 
+        console.log("new user = ", newUser)
         if(this.props.userType === "Trainer") newUser.user.level_id = this.state.level
         if(isNew) newUser.password = "password"
 
@@ -76,9 +78,9 @@ class UserForm extends Component {
                     })
                 }else{
                     if(isNew){
-                        this.props.addUser(data.user, this.props.userType)
+                        this.props.addUser(data[type])
                     }else{
-                        this.props.updateUser(data.user, this.props.userType)
+                        this.props.updateUser(data[type])
                     }
                     this.props.toggleForm()
                 }

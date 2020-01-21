@@ -21,7 +21,7 @@ class Settings extends Component {
       new_password_confirm: "",
       errors: [],
       success: false,
-      base_url: this.props.user.type === "Manager" ? "users" : this.props.user.type.toLowerCase() + 's'
+      base_url: this.props.user.user_type === "Manager" ? "users" : this.props.user.user_type.toLowerCase() + 's'
   }
 
   handleErrors = () => {
@@ -54,7 +54,7 @@ handleResponse = (data) => {
         })
     }else{
 
-        this.props.updateUser(data.user, this.props.user.type)
+        this.props.updateUser(data.user, this.props.user.user_type)
         this.setState({
             success: true
         })
@@ -69,7 +69,7 @@ handleResponse = (data) => {
         const user = {
             email: email,
             password: old_password,
-            type: this.props.user.type
+            type: this.props.user.user_type
         };
 
         //confirm old password
@@ -139,10 +139,10 @@ handleResponse = (data) => {
             phone: this.state.phone,
             gender: this.state.gender
             },
-        type: this.props.userType
+        user_type: this.props.userType
      }
 
-    if(this.props.user.type === "Trainer") newUser.user.level_id = this.state.level
+    if(this.props.user.user_type === "Trainer") newUser.user.level_id = this.state.level
 
     fetch(`${API}/${this.state.base_url}/${this.state.id}`, {
         method: "PATCH",
@@ -215,7 +215,7 @@ handleResponse = (data) => {
                 </Form>
             </Segment>
         </Grid.Column></Grid.Row>
-        {this.props.user.type === "Manager"  ?
+        {this.props.user.user_type === "Manager"  ?
             <Grid.Row><Grid.Column>
                 <Segment>
                     <Label attached="top">System Settings</Label>

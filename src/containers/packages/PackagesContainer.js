@@ -69,7 +69,7 @@ class PackagesContainer extends Component {
     }
     
     renderAddButton = () =>{
-        return this.props.user.type === "Manager" ? <Button name="add" onClick={(e) => this.handleClick(e, -1)}><Icon name="plus"/>Add Package</Button> : null
+        return this.props.user.user_type === "Manager" ? <Button name="add" onClick={(e) => this.handleClick(e, -1)}><Icon name="plus"/>Add Package</Button> : null
     }
 
     // Render the level sections for the package list
@@ -92,7 +92,7 @@ class PackagesContainer extends Component {
 
     // Render the packages in the sub-heading 
     renderPackages = (packs) => {
-        let type = this.props.user.type
+        let type = this.props.user.user_type
         
         let options = {
             "Manager": {

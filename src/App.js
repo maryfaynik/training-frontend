@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
@@ -10,12 +10,9 @@ import {initialFetch, setUser, setUserLoading, setLoading} from './actions/actio
 export const API = "http://localhost:3000/api/v1"
 // export const API = "https://training-manager-backend.herokuapp.com/api/v1"
 
-class App extends Component {
-
-  state= {
-    
-  }
-
+//const App = (props) => {
+class App extends React.Component{
+  //const useEffect = () =>{
   componentDidMount(){
     const userId = localStorage.user_id;
   
@@ -41,14 +38,12 @@ class App extends Component {
 
             console.log("found the user")
             let user= data.user.user
-            let type = data.user.type
-
             this.props.setUser(user);
             this.props.setUserLoading(false)
 
             //fetch this user's clients, sessions, and trainers
             console.log("fetching all the stuff autologin")
-            this.props.initialFetch(user, type).then(this.props.setLoading(false))
+            this.props.initialFetch(user).then(this.props.setLoading(false))
           }
 
         })
@@ -58,14 +53,13 @@ class App extends Component {
   
   }
 
-render(){
-
-    return (
-      <div className="app">
-        <NavBar/>
-       <Main/>
-      </div>
-    )
+  render(){
+  return (
+    <div className="app">
+      <NavBar/>
+      <Main/>
+    </div>
+  )
   }
     
 }

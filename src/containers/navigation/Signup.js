@@ -12,12 +12,12 @@ export class Signup extends Component {
     email: '',
     password: '',
     password_confirm: '',
-    type: 'Client',
+    user_type: 'Client',
     errors: [],
   };
 
   handleChange = (e, {value}) => {
-    let name = "type"
+    let name = "user_type"
     if(e.target.name){
       value = e.target.value
       name = e.target.name
@@ -154,27 +154,27 @@ export class Signup extends Component {
                 <Grid.Column width={5}> */}
                   <Radio
                     label='Trainer'
-                    name='type'
+                    name='user_type'
                     value='Trainer'
-                    checked={this.state.type === 'Trainer'}
+                    checked={this.state.user_type === 'Trainer'}
                     onChange={this.handleChange}
                   />
                 {/* </Grid.Column>
                 <Grid.Column width={5}> */}
                   <Radio
                     label='Manager'
-                    name='type'
+                    name='user_type'
                     value='Manager'
-                    checked={this.state.type === 'Manager'}
+                    checked={this.state.user_type === 'Manager'}
                     onChange={this.handleChange}
                   />
                 {/* </Grid.Column>
                 <Grid.Column width={5}> */}
                   <Radio
                     label='Client'
-                    name='type'
+                    name='user_type'
                     value='Client'
-                    checked={this.state.type === 'Client'}
+                    checked={this.state.user_type === 'Client'}
                     onChange={this.handleChange}
                   />
                 {/* </Grid.Column>

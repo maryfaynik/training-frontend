@@ -54,20 +54,20 @@ export class Login extends Component {
           this.props.setUserLoading(true)
 
           let user = data.user.user
-          let user_type = data.user.user_type
-          
+           
           //cache the info
           console.log("setting localstorage to, ", user.id)
           localStorage.user_id = user.id
           console.log("localStorage[user_id] =", localStorage["user_id"])
           
           //set the user in redux
+          console.log("setting user to", user)
           this.props.setUser(user);
           this.props.setUserLoading(false)
           
           console.log("fetching all the sssstuffs LOGIN")
           //fetch this user's clients, sessions, and trainers
-          this.props.initialFetch(user, user_type)
+          this.props.initialFetch(user)
           
         // If user is not valid / found, set user to null and record errors
         } else {

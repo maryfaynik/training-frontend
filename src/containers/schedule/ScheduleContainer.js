@@ -39,7 +39,7 @@ class ScheduleContainer extends Component {
     // (i.e. a drop-down, view change, etc.)
     setData = () => {
         const {user} = this.props
-        switch(user.type){
+        switch(user.user_type){
             case "Trainer":
                 this.setState({
                     userType: "Trainer",

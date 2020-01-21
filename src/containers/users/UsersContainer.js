@@ -171,7 +171,7 @@ class UsersContainer extends Component {
                         
                             <Card.Content extra>
                                 <div>
-                                {currentUser.type === "Manager" ? 
+                                {currentUser.user_type === "Manager" ? 
                                     <Fragment>
                                     <Button value={user.id} onClick={this.toggleForm}>Edit</Button> 
                                     </Fragment>
