@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Menu} from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 
-import { setActivePage } from '../actions/actions'
+import { setActivePage } from '../../actions/actions'
 
 const SideBar = (props) => {
   

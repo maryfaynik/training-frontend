@@ -7,7 +7,7 @@ import {getFullName, getAge, getLevelOptions} from '../../helpers/generalHelpers
 import { deleteUser} from '../../actions/actions'
 import UserForm from './UserForm'
 import UserModal from './UserModal'
-import Loading from '../../components/Loading'
+import Loading from '../../components/navigation/Loading'
 import {API} from '../../App'
 
 const defaultUser = {

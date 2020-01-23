@@ -3,7 +3,7 @@ import { Menu, Icon, Dropdown } from 'semantic-ui-react';
 import { withRouter} from 'react-router-dom';
 import { connect } from 'react-redux' 
 
-import { setUser } from '../actions/actions'
+import { setUser } from '../../actions/actions'
 
 const NavBar = props => {
   

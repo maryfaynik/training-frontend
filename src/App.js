@@ -2,20 +2,19 @@ import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
-import NavBar from './components/NavBar'
-import Main from './components/Main'
+import NavBar from './components/navigation/NavBar'
+import Main from './components/navigation/Main'
 
 import {initialFetch, setUser, setUserLoading, setLoading} from './actions/actions'
 
-// export const API = "http://localhost:3000/api/v1"
-export const API = "https://training-manager-backend.herokuapp.com/api/v1"
+export const API = "http://localhost:3000/api/v1"
+// export const API = "https://training-manager-backend.herokuapp.com/api/v1"
 
 
-
-//const App = (props) => {
-class App extends React.Component{
-  //const useEffect = () =>{
-  componentDidMount(){
+const App = (props) => {
+// class App extends React.Component{
+  useEffect(() =>{
+  //componentDidMount(){
     const userId = localStorage.user_id;
   
     if (userId) {
@@ -32,39 +31,41 @@ class App extends React.Component{
           //if cached login info fails, clear cache and force login
           if(data.status !== 200){
             localStorage.removeItem("user_id")
-            this.props.setUser({})
-            this.props.setUserLoading(false)
+            props.setUser({})
+            props.setUserLoading(false)
 
           //on success keep cached login info and set user
           }else{
 
             console.log("found the user")
             let user= data.user.user
-            this.props.setUser(user);
-            this.props.setUserLoading(false)
+            props.setUser(user);
+            props.setUserLoading(false)
 
             //fetch this user's clients, sessions, and trainers
             console.log("fetching all the stuff autologin")
-            this.props.initialFetch(user).then(this.props.setLoading(false))
+            props.initialFetch(user)
           }
 
         })
     }else{
-      this.props.setUserLoading(false)
+      console.log('setting user loading to false')
+      props.setUserLoading(false)
     }
   
-  }
+  }, [])
 
-  render(){
+  // render(){
   return (
     <div className="app">
       <NavBar/>
       <Main/>
     </div>
   )
-  }
-    
+  // }
 }
+    
+
 
 const msp = (state) =>{
   return {

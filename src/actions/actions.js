@@ -32,6 +32,7 @@ export function setActivePage(page){
 }
 
 export function setUserLoading(flag){
+    console.log("setting...", flag)
     return {type: "SET_USER_LOADING", payload: flag}
 }
 

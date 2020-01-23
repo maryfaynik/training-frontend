@@ -54,7 +54,7 @@ class UserForm extends Component {
         }
 
         console.log("new user = ", newUser)
-        if(this.props.userType === "Trainer") newUser.user.level_id = this.state.level
+        if(type === "trainer") newUser[type].level_id = this.state.level
         if(isNew) newUser.password = "password"
 
         let base_url = this.props.userType === "Trainer" ? "trainers" : "clients"
@@ -96,6 +96,10 @@ class UserForm extends Component {
         let {isNew, userType} = this.props
         return (
             <div className= 'outer-popup'>
+                {/* <Confirm open={confirmOpen} onCancel={handleConfirmDelete} onConfirm={()=>handleDelete(undefined, "cancelled")}
+                content='Do you really want to delete this user?'
+                header='Are you sure?'
+                /> */}
             <div className="inner-popup">
                 <Form className="user-form" id="user-form" onSubmit={this.handleSubmit}>
                     <Form.Group>
