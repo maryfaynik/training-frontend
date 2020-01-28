@@ -137,17 +137,17 @@ const AddEditPackageForm = (props) => {
             <Form className='package-form' id="package-form" value={id} onSubmit={handleSubmit}>
                 <Header as="h3">{props.isNew ? "New" : "Edit"} Package</Header>
                 <Form.Group >
-                    <Form.Input onChange={(value) => setTitle(value)} value={title} name="title" label='Title' type="text"/>
+                    <Form.Input onChange={(e) => setTitle(e.target.value)} value={title} name="title" label='Title' type="text"/>
                 </Form.Group>
                 <Form.Group > 
-                    <Form.Input onChange={(value) => setSession_count(value)} value={session_count} name="session_count" label='Session Count' type="number"/>
-                    <Form.Input onChange={(value) => setExp_weeks(value)} value={exp_weeks} name="exp_weeks" label="Expiration (weeks)" labelPosition='right' type="number"/>
+                    <Form.Input onChange={(e) => setSession_count(e.target.value)} value={session_count} name="session_count" label='Session Count' type="number"/>
+                    <Form.Input onChange={(e) => setExp_weeks(e.target.value)} value={exp_weeks} name="exp_weeks" label="Expiration (weeks)" labelPosition='right' type="number"/>
                 </Form.Group> 
                 <Form.Group >
-                    <Form.Input onChange={(value) => setPrice(value)} value={price} name="price" labelPosition='right' 
+                    <Form.Input onChange={(e) => setPrice(e.target.value)} value={price} name="price" labelPosition='right' 
                                 label="Price" type='number' placeholder='Price' icon='dollar sign' iconPosition='left'/>
                     <Form.Select
-                        onChange={(value) => setLevel_id(value)}
+                        onChange={(e, {value}) => setLevel_id(value)}
                         value={level_id}
                         name="level_id"
                         label='Level'

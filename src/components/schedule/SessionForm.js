@@ -188,6 +188,11 @@ const SessionForm = (props) => {
                 />)
     }
 
+    const handleDateChange = (e) => {
+        let date = new Date(e.target.value)
+        if(date.getTime() !== date.getTime()) return
+        setDate(e.target.value)
+    }
 
     let {isNew} = props
     return (
@@ -245,7 +250,7 @@ const SessionForm = (props) => {
                     
                     <Form.Group inline>
                         <Label horizontal>Date</Label>
-                        <Form.Input onChange={(e)=> setDate(e.target.value)} value={new Date(date).toISOString().split("T")[0]} name="date" type="date"/>
+                        <Form.Input onChange={handleDateChange} value={new Date(date).toISOString().split("T")[0]} name="date" type="date"/>
             
                         <Label>Time</Label>
                         <Form.Input onChange={(e)=> setTime(e.target.value)} value={time} name="time" type="time"/>

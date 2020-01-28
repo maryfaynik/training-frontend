@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Form, Button, Header, Label, Segment} from 'semantic-ui-react';
@@ -9,46 +9,50 @@ import {getPackageOptions} from '../../helpers/generalHelpers'
 
 import {API} from '../../App'
 
-class BuySellPackageForm extends Component {
 
-    state = {
-        package_id: this.props.package.id,
-        client_id: this.props.client.id,
-        errors: []
-    }
+const BuySellPackageForm = (props) => {
+    // state = {
+    //     package_id: props.package.id,
+    //     client_id: props.client.id,
+    //     errors: []
+    // }
 
-    handleChange = (e, {value, name}) => {
-        if(e.target.value){
-            value = e.target.value
-            name = e.target.name
-        }
+    let [package_id, setPackage_id] = useState(props.package.id)
+    let [client_id, setClient_id] = useState(props.client.id)
+    let [errors, setErrors] = useState([])
 
-        this.setState({
-            [name]: value
-        })
-    }
 
-    handleSubmit = (e) =>{
+
+    // const handleChange = (e, {value, name}) => {
+    //     if(e.target.value){
+    //         value = e.target.value
+    //         name = e.target.name
+    //     }
+
+    //     setState({
+    //         [name]: value
+    //     })
+    // }
+
+    const handleSubmit = (e) =>{
 
         e.preventDefault()
 
-        let pack = this.props.packages.find(pack => pack.id === this.state.package_id)
+        let pack = props.packages.find(pack => pack.id === package_id)
         let exp = new Date() 
         exp.setDate(exp.getDate() + pack.exp_weeks * 7)
 
         let soldPackage = {
             client_package: {
-                client_id: this.state.client_id,
-                package_id: this.state.package_id,
+                client_id: client_id,
+                package_id: package_id,
                 session_count: pack.session_count,
                 expiration: exp
             }
         }
         
         if(false){
-            this.setState({
-                errors: [ "Problemo"]
-            })
+            setErrors([ "Problemo"])
         }else{
         
             fetch(`${API}/client_packages`, {
@@ -63,59 +67,53 @@ class BuySellPackageForm extends Component {
                 .then(data => {
     
                     if(data.errors){
-                        this.setState({
-                            errors: data.errors,
-                        })
+                        setErrors(data.errors)
                     }else{
-                        this.props.sellPackage(data.client_package)
-                        this.props.toggleForm()
+                        props.sellPackage(data.client_package)
+                        props.toggleForm()
                     }
                 })
         }
              
     }
 
-    renderErrors = () => {
-        return this.state.errors.map((error, i) => <li key={i}>{error}</li>)
+    const renderErrors = () => {
+        return errors.map((error, i) => <li key={i}>{error}</li>)
     }
-
-    render(){
-        console.log('rendering buy/sell package form...state = ', this.state)
        
-        return (
-            <div className= 'outer-popup'>
-            <div className="inner-popup">
-                <Header as={'h1'}>{this.props.selling ? "Sell" : "Buy"} Package</Header>
-                <Form className='sell-package-form' id="sell-package-form" value={this.state.id} onSubmit={this.handleSubmit}>
-                    <Form.Group>
-                        <Segment>
-                            <Label attached="top">Client</Label>
-                            <ClientSearch client_id={this.state.client_id} clients={this.props.allClients} setClient={(id) => this.setState({client_id: id})}/>
+    return (
+        <div className= 'outer-popup'>
+        <div className="inner-popup">
+            <Header as={'h1'}>{props.selling ? "Sell" : "Buy"} Package</Header>
+            <Form className='sell-package-form' id="sell-package-form" onSubmit={handleSubmit}>
+                <Form.Group>
+                    <Segment>
+                        <Label attached="top">Client</Label>
+                        <ClientSearch client_id={client_id} clients={props.allClients} setClient={(id) => setClient_id(id)}/>
 
-                        </Segment>
-                    </Form.Group>
-                    <Form.Group>  
-                        <Segment>
-                            <Label attached="top">Package</Label> 
-                            <Form.Select
-                                onChange={this.handleChange}
-                                value={this.state.package_id}
-                                name="package_id"
-                                options={getPackageOptions(this.props.packages)}
-                                placeholder='Select Package'
-                            />
-                        </Segment>
-                    </Form.Group>
-                </Form>
-                    <p>
-                        <Button primary type="submit" form={"sell-package-form"}>{this.props.selling ? "Sell Package" : "Buy Package"}</Button>
-                        <Button onClick={this.props.goBack}>Go Back</Button>
-                    </p>
-                    {this.state.errors.length > 0 ? <ul>{this.renderErrors()}</ul> : null}
-            </div>
-            </div>
-        )
-    }
+                    </Segment>
+                </Form.Group>
+                <Form.Group>  
+                    <Segment>
+                        <Label attached="top">Package</Label> 
+                        <Form.Select
+                            onChange={(e, {value}) => setPackage_id(value)}
+                            value={package_id}
+                            name="package_id"
+                            options={getPackageOptions(props.packages)}
+                            placeholder='Select Package'
+                        />
+                    </Segment>
+                </Form.Group>
+            </Form>
+                <p>
+                    <Button primary type="submit" form={"sell-package-form"}>{props.selling ? "Sell Package" : "Buy Package"}</Button>
+                    <Button onClick={props.goBack}>Go Back</Button>
+                </p>
+                {errors.length > 0 ? <ul>{renderErrors()}</ul> : null}
+        </div>
+        </div>
+    )
 }
 
 
